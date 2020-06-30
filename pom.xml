@@ -94,23 +94,13 @@
       </releases>
       <layout>default</layout>
     </repository>
-<!--    <repository>-->
-<!--      <id>hippo-forge</id>-->
-<!--      <name>Hippo Forge Maven 2 repository.</name>-->
-<!--      <url>https://maven.onehippo.com/maven2-forge/</url>-->
-<!--      <snapshots>-->
-<!--        <enabled>false</enabled>-->
-<!--      </snapshots>-->
-<!--      <releases>-->
-<!--        <updatePolicy>never</updatePolicy>-->
-<!--      </releases>-->
-<!--      <layout>default</layout>-->
-<!--    </repository>-->
   </repositories>
 
   <modules>
     <module>api</module>
+    <module>common</module>
     <module>frontend-app</module>
+    <module>repository</module>
     <module>site</module>
   </modules>
 

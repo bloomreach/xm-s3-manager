@@ -1,4 +1,4 @@
-package com.bloomreach.xm.manager.util;
+package com.bloomreach.xm.manager.common.util;
 
 public class Util {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020 Bloomreach (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,43 @@
     return value;
   }
 
+  function isSelectionEmpty(selection) {
+    if (selection === null || selection.getType() === CKEDITOR.SELECTION_NONE) {
+      return true;
+    }
+    var ranges = selection.getRanges();
+    return ranges.length === 0 || ranges[0].collapsed;
+  }
+
+  function getSelectedLinkOrNull(selection) {
+    var startElement, linkNode;
+
+    if (selection === null) {
+      return null;
+    }
+
+    startElement = selection.getStartElement();
+
+    if (startElement !== null) {
+      linkNode = startElement.getAscendant('a', true);
+      if (linkNode !== null && linkNode.is('a')) {
+        return linkNode;
+      }
+    }
+    return null;
+  }
+
+  function createLinkAttributePairs(paramsMap, parameters) {
+    var pairs = {};
+    iterate(paramsMap, function (attribute, parameterName) {
+      var parameterValue = parameters[parameterName];
+      if (parameterValue !== undefined && parameterValue !== null && parameterValue !== "") {
+        pairs[attribute] = parameterValue;
+      }
+    });
+    return pairs;
+  }
+
   function setElementAttributes (element, attributeParameterMap, parameters) {
     iterate(attributeParameterMap, function (attribute, parameterName) {
       var parameterValue = getNestedValue(parameters, parameterName);
@@ -53,9 +90,13 @@
   function initS3Manager (editor) {
 
     var IMAGE_ATTRIBUTE_PARAMETER_MAP = {
-        'data-bid': 'id',
-        alt: 'description',
-        src: 'urlSelectedVariant'
+        'data-s3id': 'id',
+        alt: 'name',
+        src: 'link'
+      },
+      ANCHOR_ATTRIBUTE_PARAMETER_MAP = {
+        'data-s3id': 'id',
+        href: 'link'
       },
       LANG = editor.lang.s3manager;
 
@@ -71,8 +112,8 @@
       command: 'pickS3Asset',
       toolbar: 'links,10',
       icon: 'plugins/s3manager/icons/s3manager.png',
-      allowedContent: 'img[!data-btype,!data-bid,!src,alt]',
-      requiredContent: 'img[!data-btype,!data-bid,!src]'
+      allowedContent: 'img[!data-s3id,!src,alt]; a[!data-s3id,!href]',
+      requiredContent: 'img[!data-s3id,!src]; a[!data-s3id,!href]'
 
     });
 
@@ -83,14 +124,30 @@
     });
 
     function insertS3Asset (parameters) {
-      var img = editor.document.createElement('img');
-      setElementAttributes(img, IMAGE_ATTRIBUTE_PARAMETER_MAP, parameters);
-      editor.insertElement(img);
+      var selection = editor.getSelection();
+
+      if(!isSelectionEmpty(selection)){
+        var range, linkAttributes, linkStyle;
+        range = selection.getRanges()[0];
+        linkAttributes = createLinkAttributePairs(ANCHOR_ATTRIBUTE_PARAMETER_MAP, parameters);
+        linkStyle = new CKEDITOR.style({
+          element: 'a',
+          attributes: linkAttributes,
+          type: CKEDITOR.STYLE_INLINE
+        });
+        linkStyle.applyToRange(range);
+        range.select();
+      } else {
+        var img = editor.document.createElement('img');
+        setElementAttributes(img, IMAGE_ATTRIBUTE_PARAMETER_MAP, parameters);
+        editor.insertElement(img);
+      }
     }
 
     var assetListener = function (event) {
-      console.log(event);
-      insertS3Asset(event.data);
+      if (event.data && event.data.length) {
+        insertS3Asset(event.data[0]);
+      }
     };
 
   }

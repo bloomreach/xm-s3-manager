@@ -43,7 +43,6 @@ class BrXMExplorerDialogWrapper extends React.Component {
   }
 
   render () {
-    console.log('---rendering----');
     const {items} = this.state || [];
     const {loaded} = this.state || false;
     return loaded ? <S3Explorer authenticationHeader={'Basic '+ this.authenticationHeader} onClose={this.onClose} selected={items} baseURL={this.baseURL}/> : ''

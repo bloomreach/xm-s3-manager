@@ -1,7 +1,6 @@
 package com.bloomreach.xm.manager.api;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import javax.ws.rs.core.Context;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 
+import com.bloomreach.xm.manager.common.api.ListItem;
 import com.bloomreach.xm.manager.s3.model.S3Permissions;
 
 public interface ProxyController<T extends ListItem> {

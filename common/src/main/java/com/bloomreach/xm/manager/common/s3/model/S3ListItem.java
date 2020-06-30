@@ -1,15 +1,15 @@
-package com.bloomreach.xm.manager.s3.model;
+package com.bloomreach.xm.manager.common.s3.model;
 
 import java.util.Date;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.bloomreach.xm.manager.api.ListItem;
-import com.bloomreach.xm.manager.api.Type;
-import com.bloomreach.xm.manager.util.Util;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
+
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.bloomreach.xm.manager.common.api.ListItem;
+import com.bloomreach.xm.manager.common.api.Type;
+import com.bloomreach.xm.manager.common.util.Util;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class S3ListItem implements ListItem {

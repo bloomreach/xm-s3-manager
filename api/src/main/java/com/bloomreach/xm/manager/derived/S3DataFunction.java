@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
-import com.bloomreach.xm.manager.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

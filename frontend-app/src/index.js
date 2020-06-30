@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let extensionConfig;
     let acl;
     let baseUrl;
-    console.log(window.location.href);
     if(!window.location.href.includes('ckeditor')) {
       ui = await UiExtension.register();
       extensionConfig = JSON.parse(ui.extension.config);

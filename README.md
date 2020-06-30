@@ -10,6 +10,11 @@ Add the below dependencies in the cms-dependencies pom.xml
     </dependency>
     <dependency>
       <groupId>com.bloomreach.xm.manager</groupId>
+      <artifactId>brxm-s3-manager-repository</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bloomreach.xm.manager</groupId>
       <artifactId>brxm-s3-manager-frontend-app</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -23,28 +28,16 @@ Add the below dependency in the site/components pom.xml
     </dependency>
 ```
 
-Modify web.xml of the CMS application
+(Optional) Add CKEditor S3 Manager button
 
-```$xslt
-    <servlet>
-        <servlet-name>OpenUIResourceServlet</servlet-name>
-        <servlet-class>org.onehippo.cms7.utilities.servlet.SecureCmsResourceServlet</servlet-class>
-        <init-param>
-          <param-name>jarPathPrefix</param-name>
-          <param-value>/openui</param-value>
-        </init-param>
-        <init-param>
-          <param-name>allowedResourcePaths</param-name>
-          <param-value>
-            ^/.*\..*
-          </param-value>
-        </init-param>
-    </servlet>
-    
-    <!--SNIP-->
+Configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level /hippo:namespaces/system/Html/editor:templates/_default_
+```
+ckeditor.config.overlayed.json: '{   extraPlugins: ''iframedialog,s3manager''                 }'
+```
 
-    <servlet-mapping>
-        <servlet-name>OpenUIResourceServlet</servlet-name>
-        <url-pattern>/openui/*</url-pattern>
-    </servlet-mapping>
+Add custom content rewriter for RTF
+
+In your project add the below line in /site/webapp/src/main/webapp/WEB-INF/hst-config.properties
+```
+default.hst.contentrewriter.class = com.bloomreach.xm.manager.rewriter.S3AssetsLinkRewriter
 ```

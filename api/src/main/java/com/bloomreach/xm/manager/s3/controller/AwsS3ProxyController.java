@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bloomreach.xm.manager.api.ProxyController;
-import com.bloomreach.xm.manager.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.common.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.model.S3Permissions;
-import com.bloomreach.xm.manager.s3.service.AwsS3Service;
 
 @Path("/awsS3")
 public class AwsS3ProxyController implements ProxyController<S3ListItem> {
@@ -42,10 +42,10 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     public static final String S3_UPLOAD_PERMISSION = "xm.s3manager-upload.user";
     public static final String S3_DELETE_PERMISSION = "xm.s3manager-delete.user";
     public static final String S3_CREATE_PERMISSION = "xm.s3manager-create.user";
-    private final AwsS3Service awsS3Service;
+    private final AwsS3ServiceImpl awsS3Service;
     private final Session systemSession;
 
-    public AwsS3ProxyController(final AwsS3Service awsS3Service, final Session systemSession) {
+    public AwsS3ProxyController(final AwsS3ServiceImpl awsS3Service, final Session systemSession) {
         this.awsS3Service = awsS3Service;
         this.systemSession =systemSession;
     }
@@ -86,6 +86,7 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
             if (chunkFile != null) {
+                //TODO Doesnt work
                 awsS3Service.uploadMultipart(chunkFile, path, index, total);
             }
             if (uploadFiles != null) {

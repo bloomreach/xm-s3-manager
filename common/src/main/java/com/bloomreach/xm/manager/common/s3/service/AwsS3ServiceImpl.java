@@ -1,4 +1,4 @@
-package com.bloomreach.xm.manager.s3.service;
+package com.bloomreach.xm.manager.common.s3.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -36,27 +36,41 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.services.s3.model.UploadPartResult;
-import com.bloomreach.xm.manager.api.ListItem;
-import com.bloomreach.xm.manager.api.Type;
-import com.bloomreach.xm.manager.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.common.api.AwsS3Service;
+import com.bloomreach.xm.manager.common.api.ListItem;
+import com.bloomreach.xm.manager.common.api.Type;
+import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
 
-public class AwsS3Service {
+public class AwsS3ServiceImpl implements AwsS3Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(AwsS3Service.class);
+    private static final Logger logger = LoggerFactory.getLogger(AwsS3ServiceImpl.class);
     private final String bucket;
     private final AmazonS3 amazonS3;
+    private final boolean presigned;
+    private final double expTime;
     private final Map<String, InitiateMultipartUploadResult> multipartUploadResultMap = new HashMap<>();
     private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap();
 
-    public AwsS3Service(final AwsService awsService, final String bucket) {
+    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final double expTime) {
         this.bucket = bucket;
         amazonS3 = awsService.getS3client();
+        this.presigned = presigned;
+        this.expTime = expTime;
     }
 
-    public String generatePresignedUrl(String key) {
+    @Override
+    public String generateUrl(final String key) {
+        if(!presigned) {
+            return amazonS3.getUrl(bucket, key).toString();
+        } else {
+            return generatePresignedUrl(key);
+        }
+    }
+
+    public String generatePresignedUrl(final String key) {
         java.util.Date expiration = new java.util.Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60;
+        expTimeMillis += 1000 * 60 * expTime;
         expiration.setTime(expTimeMillis);
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest =

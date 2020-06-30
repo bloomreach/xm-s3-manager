@@ -205,7 +205,6 @@ class S3Explorer extends React.Component {
   }
 
   triggerckeditorEvent(item){
-    console.log("ckeditor event...", item);
     var pickerDialog = window.parent.CKEDITOR.dialog.getCurrent();
     pickerDialog.fire('assetSelected', item);
     pickerDialog.getButton('cancel').click();
@@ -279,7 +278,8 @@ class S3Explorer extends React.Component {
                   rowData.tableData.disabled = this.containsObject(rowData, selected);
                   return {
                     disabled: this.containsObject(rowData, selected),
-                    onClick: (event, rowData) => this.props.context==='ckeditor' ? console.log('single mode'): null,
+                    // checked: this.props.context === 'ckeditor' && this.state.singleSelect && rowData.id === this.state.singleSelect.id,
+                    // onClick: (event, rowData) => this.props.context==='ckeditor' ? this.setState({singleSelect: rowData}): null,
                   }
 
                 },
