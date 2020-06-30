@@ -1,0 +1,5 @@
+definitions:
+  namespace:
+    s3manager:
+      uri: http://extdockpicker.bloomreach.com/s3manager/1.0
+      cnd: s3manager.cnd

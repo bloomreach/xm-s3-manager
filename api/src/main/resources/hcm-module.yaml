@@ -1,0 +1,5 @@
+group: hippo-cms
+project:
+  name: brxm-s3-manager
+  after: [hippo-repository, hippo-cms]
+module: brxm-s3-manager-repository

@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:userroles/xm.s3manager-delete.user:
+      jcr:primaryType: hipposys:userrole
+      hipposys:description: Required to use the S3 plugin with delete operation
+      hipposys:system: true
+      hipposys:userroles: []

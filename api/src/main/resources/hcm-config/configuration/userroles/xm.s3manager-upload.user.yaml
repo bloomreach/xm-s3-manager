@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:userroles/xm.s3manager-upload.user:
+      jcr:primaryType: hipposys:userrole
+      hipposys:description: Required to use the S3 plugin with upload operation
+      hipposys:system: true
+      hipposys:userroles: []

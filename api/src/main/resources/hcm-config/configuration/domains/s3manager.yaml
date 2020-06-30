@@ -1,0 +1,80 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:domains/s3manager:
+      jcr:primaryType: hipposys:domain
+      /s3manager-module:
+        jcr:primaryType: hipposys:domainrule
+        /s3manager-module:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:path
+          hipposys:type: Reference
+          hipposys:value: /hippo:configuration/hippo:modules/s3manager
+      /s3manager-user:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+        hipposys:role: s3user
+        hipposys:userrole:
+          .meta:category: system
+          type: string
+          value: xm.s3manager.user
+        hipposys:users:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+      /s3manager-upload:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+        hipposys:role: s3upload
+        hipposys:userrole:
+          .meta:category: system
+          type: string
+          value: xm.s3manager.user
+        hipposys:users:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+      /s3manager-delete:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+        hipposys:role: s3delete
+        hipposys:userrole:
+          .meta:category: system
+          type: string
+          value: xm.s3manager.user
+        hipposys:users:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+      /s3manager-create:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []
+        hipposys:role: s3create
+        hipposys:userrole:
+          .meta:category: system
+          type: string
+          value: xm.s3manager.user
+        hipposys:users:
+          .meta:category: system
+          .meta:add-new-system-values: true
+          type: string
+          value: []

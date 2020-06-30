@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:userroles/xm.s3manager.user:
+      jcr:primaryType: hipposys:userrole
+      hipposys:description: Required to use the S3 plugin
+      hipposys:system: true
+      hipposys:userroles: []

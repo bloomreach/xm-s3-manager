@@ -1,0 +1,17 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:derivatives/s3manager:
+      jcr:primaryType: hipposys:deriveddefinition
+      hipposys:classname: com.bloomreach.xm.manager.derived.S3DataFunction
+      hipposys:nodetype: s3manager:s3managerpicker
+      hipposys:serialver: 1
+      /hipposys:accessed:
+        jcr:primaryType: hipposys:propertyreferences
+        /assets:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: s3manager:assets
+      /hipposys:derived:
+        jcr:primaryType: hipposys:propertyreferences
+        /assetids:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: s3manager:assetids

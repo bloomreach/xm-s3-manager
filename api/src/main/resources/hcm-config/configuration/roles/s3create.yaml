@@ -1,0 +1,6 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:roles/s3create:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:read']
+      hipposys:system: true
