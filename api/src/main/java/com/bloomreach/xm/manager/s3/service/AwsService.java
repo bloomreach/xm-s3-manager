@@ -1,4 +1,4 @@
-package com.bloomreach.xm.manager.common.s3.service;
+package com.bloomreach.xm.manager.s3.service;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.regions.Regions;

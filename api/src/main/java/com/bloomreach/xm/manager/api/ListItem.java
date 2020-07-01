@@ -1,4 +1,4 @@
-package com.bloomreach.xm.manager.common.api;
+package com.bloomreach.xm.manager.api;
 
 import java.util.Date;
 

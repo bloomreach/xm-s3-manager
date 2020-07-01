@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bloomreach.xm.manager.api.ProxyController;
-import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
-import com.bloomreach.xm.manager.common.s3.service.AwsS3ServiceImpl;
+import com.bloomreach.xm.manager.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.model.S3Permissions;
 
 @Path("/awsS3")

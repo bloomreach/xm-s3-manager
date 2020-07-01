@@ -12,9 +12,9 @@ import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
 
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
-import com.bloomreach.xm.manager.common.s3.service.AwsCredentials;
-import com.bloomreach.xm.manager.common.s3.service.AwsS3ServiceImpl;
-import com.bloomreach.xm.manager.common.s3.service.AwsService;
+import com.bloomreach.xm.manager.s3.service.AwsCredentials;
+import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
+import com.bloomreach.xm.manager.s3.service.AwsService;
 import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 

@@ -1,8 +1,77 @@
 Installation steps
 
+In the root pom.xml add the bellow dependency both in the dependencyManagement and dependencies section
+```$xslt
+    <dependencyManagement>
+        <dependencies>
+          <!--SNIP-->
+          
+          <dependency>
+            <groupId>com.bloomreach.xm.manager</groupId>
+            <artifactId>brxm-s3-manager-common</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+          </dependency>
+          
+          <!--SNIP-->
+        </dependencies>
+    </dependencyManagement>
+    
+    <dependencies>
+        <!--SNIP-->
+
+        <dependency>
+          <groupId>com.bloomreach.xm.manager</groupId>
+          <artifactId>brxm-s3-manager-common</artifactId>
+          <version>0.1.0-SNAPSHOT</version>
+          <scope>provided</scope>
+        </dependency>
+
+        <!--SNIP-->
+    </dependencies>
+```
+
+In the root pom.xml under the profile cargo run and in the 
+```$xslt
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <!--SNIP-->
+                <configuration>
+                    <container>
+                        <!--SNIP-->
+                        <dependencies>
+                          <!--SNIP-->
+                    
+                          <dependency>
+                            <groupId>com.bloomreach.xm.manager</groupId>
+                            <artifactId>brxm-s3-manager-common</artifactId>
+                            <classpath>shared</classpath>
+                          </dependency>
+                    
+                          <!--SNIP-->
+                        </dependencies>
+                    </container>
+                </configuration
+            </plugin>
+        </plugins>
+    </build
+```
+
+In the src/main/assembly/shared-lib-component.xml add the below entry
+```$xslt
+<include>com.bloomreach.xm.manager:brxm-s3-manager-common</include>
+```
+
 Add the below dependencies in the cms-dependencies pom.xml
 
 ```$xslt
+    <dependency>
+      <groupId>com.bloomreach.xm.manager</groupId>
+      <artifactId>brxm-s3-manager-common</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.bloomreach.xm.manager</groupId>
       <artifactId>brxm-s3-manager-api</artifactId>
@@ -21,6 +90,10 @@ Add the below dependencies in the cms-dependencies pom.xml
 ```
 Add the below dependency in the site/components pom.xml
 ```$xslt
+    <dependency>
+      <groupId>com.bloomreach.xm.manager</groupId>
+      <artifactId>brxm-s3-manager-common</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.bloomreach.xm.manager</groupId>
       <artifactId>brxm-s3-manager-site</artifactId>

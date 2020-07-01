@@ -17,7 +17,6 @@ import javax.ws.rs.core.Context;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 
-import com.bloomreach.xm.manager.common.api.ListItem;
 import com.bloomreach.xm.manager.s3.model.S3Permissions;
 
 public interface ProxyController<T extends ListItem> {

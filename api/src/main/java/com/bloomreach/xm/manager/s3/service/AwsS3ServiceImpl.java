@@ -1,4 +1,4 @@
-package com.bloomreach.xm.manager.common.s3.service;
+package com.bloomreach.xm.manager.s3.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,9 +38,9 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.services.s3.model.UploadPartResult;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
-import com.bloomreach.xm.manager.common.api.ListItem;
-import com.bloomreach.xm.manager.common.api.Type;
-import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
+import com.bloomreach.xm.manager.api.ListItem;
+import com.bloomreach.xm.manager.api.Type;
+import com.bloomreach.xm.manager.s3.model.S3ListItem;
 
 public class AwsS3ServiceImpl implements AwsS3Service {
 
