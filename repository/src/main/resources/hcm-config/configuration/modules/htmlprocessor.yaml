@@ -1,0 +1,10 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/htmlprocessor/hippo:moduleconfig/richtext/a:
+      attributes:
+        operation: add
+        value: [data-s3id]
+    /hippo:configuration/hippo:modules/htmlprocessor/hippo:moduleconfig/richtext/img:
+      attributes:
+        operation: add
+        value: [data-s3id]
