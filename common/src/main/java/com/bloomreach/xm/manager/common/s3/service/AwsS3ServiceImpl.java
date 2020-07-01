@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,6 +45,7 @@ import com.bloomreach.xm.manager.common.s3.model.S3ListItem;
 public class AwsS3ServiceImpl implements AwsS3Service {
 
     private static final Logger logger = LoggerFactory.getLogger(AwsS3ServiceImpl.class);
+    private static final Tika TIKA = new Tika();
     private final String bucket;
     private final AmazonS3 amazonS3;
     private final boolean presigned;
@@ -131,7 +133,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             por = new PutObjectRequest(bucket, uniqueFileName, byteArrayInputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead);
         } catch (IOException e) {
-            logger.error("Some error.", e);
+            logger.error("An exception occurred during a single part upload to S3.", e);
         }
         amazonS3.putObject(por);
     }
@@ -141,7 +143,10 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         String uniqueFileName = path + multipartFile.getDataHandler().getName();
 
         if (!multipartUploadResultMap.containsKey(uniqueFileName)) {
-            InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, uniqueFileName).withCannedACL(CannedAccessControlList.PublicRead);
+            String contentType = TIKA.detect(uniqueFileName);
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(contentType);
+            InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, uniqueFileName, objectMetadata).withCannedACL(CannedAccessControlList.PublicRead);
             InitiateMultipartUploadResult initResponse = amazonS3.initiateMultipartUpload(initRequest);
             multipartUploadResultMap.put(uniqueFileName, initResponse);
         }
@@ -162,9 +167,9 @@ public class AwsS3ServiceImpl implements AwsS3Service {
                     .withInputStream(byteArrayInputStream)
                     .withPartSize(bytes.length);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An exception occurred during a multi part upload to S3.", e);
         }
-//        // Upload the part and add the response's ETag to our list.
+        // Upload the part and add the response's ETag to our list.
         UploadPartResult uploadResult = amazonS3.uploadPart(uploadRequest);
         eParts.add(uniqueFileName, uploadResult.getPartETag());
 

@@ -86,10 +86,8 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
             if (chunkFile != null) {
-                //TODO Doesnt work
                 awsS3Service.uploadMultipart(chunkFile, path, index, total);
-            }
-            if (uploadFiles != null) {
+            } else {
                 awsS3Service.uploadSinglepart(uploadFiles, path);
             }
         } else {
