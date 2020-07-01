@@ -24,7 +24,6 @@ function getACL(baseUrl) {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
 
-    //TODO Better handling
     let ui;
     let extensionConfig;
     let acl;
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <ACLProvider value={acl}>
         <HashRouter>
           <Switch>
-            <Route path="/ckeditor" render={props => <S3Explorer baseURL={'http://localhost:8080/cms/ws/s3manager/awsS3'} context='ckeditor'/>}/>
+            <Route path="/ckeditor" render={props => <S3Explorer baseURL={baseUrl} context='ckeditor'/>}/>
             <Route path="/dialog" render={props => <BrXMExplorerDialogWrapper ui={ui}/>}/>
             <Route exact path="/" render={props => <BrXMAppWrapper ui={ui}/>}/>
           </Switch>
@@ -57,10 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(error);
     console.error('Failed to register extension:', error.message);
     console.error('- error code:', error.code);
-    // console.log('fallback render');
-    // ReactDOM.render(
-    //   <S3Explorer authenticationHeader={'Basic YWRtaW46YWRtaW4='} onClose={(items) => console.log(items)} baseURL={'http://localhost:8080/cms/ws/s3manager/awsS3'}/>, document.getElementById('root')
-    // );
   }
 });
 

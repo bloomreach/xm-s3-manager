@@ -63,7 +63,6 @@ class S3Explorer extends React.Component {
     this.okCreateFolderDialog = this.okCreateFolderDialog.bind(this);
 
     this.onClose = props.onClose;
-    this.authenticationHeader = props.authenticationHeader;
 
     const selected = isEmpty(props.selected) ? [] : props.selected
 
@@ -133,7 +132,6 @@ class S3Explorer extends React.Component {
   async deleteFiles (items) {
     return axios({
       baseURL: this.state.baseURL,
-      headers: {'Authorization': this.authenticationHeader},
       method: 'DELETE',
       url: '/deleteFiles',
       data: items
@@ -155,10 +153,8 @@ class S3Explorer extends React.Component {
   }
 
   async getItems (query) {
-    console.log('auth header' + this.authenticationHeader);
     return axios.get('/list', {
       baseURL: this.state.baseURL,
-      headers: {'Authorization': this.authenticationHeader},
       params: {
         path: this.state.folder,
         query: query.search
@@ -184,7 +180,6 @@ class S3Explorer extends React.Component {
     return axios({
       baseURL: this.state.baseURL,
       method: 'POST',
-      headers: {'Authorization': this.authenticationHeader},
       url: '/createFolder',
       data: {path: path}
     });
