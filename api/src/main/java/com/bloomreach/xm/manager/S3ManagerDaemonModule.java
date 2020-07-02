@@ -42,7 +42,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private String secretKey;
     private String bucket;
     private boolean presigned;
-    private double expTime;
+    private long expTime;
 
     @Override
     protected void doConfigure(final Node moduleConfig) throws RepositoryException {
@@ -51,7 +51,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         bucket = moduleConfig.getProperty("bucket").getString();
         presigned = moduleConfig.getProperty("presigned").getBoolean();
         if(moduleConfig.hasProperty("expirationTime")) {
-            expTime = moduleConfig.getProperty("expirationTime").getDouble();
+            expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
     }
 
@@ -82,7 +82,9 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void onConfigurationChange(final Node moduleConfig) throws RepositoryException {
+        doShutdown();
         doConfigure(moduleConfig);
+        doInitialize(moduleConfig.getSession());
     }
 
 }

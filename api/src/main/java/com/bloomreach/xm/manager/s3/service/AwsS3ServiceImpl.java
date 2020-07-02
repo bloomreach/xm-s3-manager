@@ -64,11 +64,11 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final String bucket;
     private final AmazonS3 amazonS3;
     private final boolean presigned;
-    private final double expTime;
+    private final long expTime;
     private final Map<String, InitiateMultipartUploadResult> multipartUploadResultMap = new HashMap<>();
     private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap();
 
-    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final double expTime) {
+    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final long expTime) {
         this.bucket = bucket;
         amazonS3 = awsService.getS3client();
         this.presigned = presigned;

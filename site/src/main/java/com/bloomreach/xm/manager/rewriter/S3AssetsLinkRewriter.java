@@ -33,24 +33,6 @@ public class S3AssetsLinkRewriter extends SimpleContentRewriter {
 
     private final static Logger log = LoggerFactory.getLogger(S3AssetsLinkRewriter.class);
 
-    private static boolean awsS3ServiceInitialized;
-    private static AwsS3Service awsS3Service;
-
-    private static synchronized void initService() {
-        if (!awsS3ServiceInitialized) {
-            awsS3Service = HippoServiceRegistry.getService(AwsS3Service.class);
-            awsS3ServiceInitialized = true;
-            log.debug("Successfully retrieved AwsS3Service from HippoServiceRegistry.");
-        }
-    }
-
-    protected static AwsS3Service getAwsS3Service() {
-        if (!awsS3ServiceInitialized) {
-            initService();
-        }
-        return awsS3Service;
-    }
-
     @Override
     public String rewrite(final String html, final Node hippoHtmlNode, final HstRequestContext requestContext, final Mount targetMount) {
         if (html == null) {
@@ -62,7 +44,7 @@ public class S3AssetsLinkRewriter extends SimpleContentRewriter {
         Elements s3elements = document.getElementsByAttribute("data-s3id");
         s3elements.forEach(element -> {
             String key = element.attr("data-s3id");
-            String url = getAwsS3Service().generateUrl(key);
+            String url = HippoServiceRegistry.getService(AwsS3Service.class).generateUrl(key);
 
             String elementTagName = element.tagName();
             if("a".equals(elementTagName)) {
