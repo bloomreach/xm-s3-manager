@@ -101,11 +101,19 @@ Add the below dependency in the site/components pom.xml
     </dependency>
 ```
 
+In the site/webapp/src/main/webapp/WEB-INF/web.xml add to the hst-beans-annotated-classes parameter comma separated value the value below
+```$xslt
+classpath*:com/bloomreach/xm/manager/**/*.class
+```
 (Optional) Add CKEditor S3 Manager button
 
-Configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level /hippo:namespaces/system/Html/editor:templates/_default_
+(YAML) Configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level /hippo:namespaces/system/Html/editor:templates/_default_
 ```
 ckeditor.config.overlayed.json: '{   extraPlugins: ''iframedialog,s3manager''                 }'
+```
+Console or CMS document editor
+```
+ckeditor.config.overlayed.json: {   extraPlugins: 'iframedialog,s3manager'                 }
 ```
 
 Add custom content rewriter for RTF

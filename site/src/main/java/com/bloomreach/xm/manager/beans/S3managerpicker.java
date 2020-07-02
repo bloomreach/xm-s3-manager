@@ -16,15 +16,17 @@
 package com.bloomreach.xm.manager.beans;
 
 import org.hippoecm.hst.content.beans.Node;
-import org.hippoecm.hst.content.beans.standard.HippoCompound;
+import org.hippoecm.hst.content.beans.standard.HippoCompoundBean;
+import org.hippoecm.hst.content.beans.standard.HippoItem;
 import org.onehippo.cms7.essentials.dashboard.annotations.HippoEssentialsGenerated;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 
-@HippoEssentialsGenerated(internalName = "s3manager:s3managerpicker", allowModifications = false)
 @Node(jcrType = "s3manager:s3managerpicker")
-public class S3managerpicker extends HippoCompound {
+@HippoEssentialsGenerated(internalName = "s3manager:s3managerpicker", allowModifications = false)
+public class S3managerpicker extends HippoItem implements HippoCompoundBean {
+
     @HippoEssentialsGenerated(internalName = "s3manager:assets", allowModifications = false)
     public String getAssets() {
         return getSingleProperty("s3manager:assets");

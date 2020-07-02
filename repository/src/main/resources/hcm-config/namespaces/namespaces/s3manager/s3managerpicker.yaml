@@ -14,7 +14,7 @@ definitions:
           jcr:uuid: 796c6fd8-5cc8-4b5d-8e68-206a8c616b49
           hipposysedit:node: true
           hipposysedit:supertype: ['hippo:compound', 'hippostd:relaxed']
-          hipposysedit:uri: http://extdockpicker.bloomreach.com/s3manager/1.0
+          hipposysedit:uri: http://forge.bloomreach.com/s3manager/1.0
           /assets:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false

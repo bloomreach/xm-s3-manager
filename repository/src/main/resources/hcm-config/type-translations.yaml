@@ -1,0 +1,8 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:translations/hippo:types/s3manager:s3managerpicker:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: S3 manager picker
+        s3manager:assets: Assets
