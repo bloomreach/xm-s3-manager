@@ -76,7 +76,8 @@ class S3Explorer extends React.Component {
       },
       baseURL: props.baseURL,
       openCreateDialog: false,
-      folderName: ''
+      folderName: '',
+      currentSelection: []
     }
     this.tableRef = React.createRef();
     this.createFolderRef = React.createRef();
@@ -199,6 +200,14 @@ class S3Explorer extends React.Component {
     return false;
   }
 
+  determineDisabled(obj, list){
+    if(this.props.context==='ckeditor' && this.state.currentSelection.length > 0){
+      return !this.containsObject(obj, this.state.currentSelection);
+    } else {
+      return this.containsObject(obj, list);
+    }
+  }
+
   triggerckeditorEvent(item){
     var pickerDialog = window.parent.CKEDITOR.dialog.getCurrent();
     pickerDialog.fire('assetSelected', item);
@@ -265,21 +274,16 @@ class S3Explorer extends React.Component {
                 paging: false,
                 selection: true,
                 padding: 'dense',
-                // selectionProps: rowData => ({
-                //   disabled: rowData.type === 'FOLDER',
-                //   color: 'primary'
-                // }),
+                showSelectAllCheckbox: this.props.context !== 'ckeditor',
                 selectionProps: rowData => {
-                  rowData.tableData.disabled = this.containsObject(rowData, selected);
+                  rowData.tableData.disabled = this.determineDisabled(rowData, selected);
                   return {
-                    disabled: this.containsObject(rowData, selected),
-                    // checked: this.props.context === 'ckeditor' && this.state.singleSelect && rowData.id === this.state.singleSelect.id,
-                    // onClick: (event, rowData) => this.props.context==='ckeditor' ? this.setState({singleSelect: rowData}): null,
+                    disabled: this.determineDisabled(rowData, selected),
                   }
-
                 },
                 sorting: true,
               }}
+              onSelectionChange={(data) => this.setState({currentSelection:data})}
               components={{
                 Toolbar: props => (
                   <AppBar position="fixed" color={'default'}>
