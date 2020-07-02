@@ -105,6 +105,15 @@ In the site/webapp/src/main/webapp/WEB-INF/web.xml add to the hst-beans-annotate
 ```$xslt
 classpath*:com/bloomreach/xm/manager/**/*.class
 ```
+
+In the content bean of the document type that you have enabled the S3 compound add a getter similar to this
+```$xslt
+@HippoEssentialsGenerated(internalName = "demo:assets", allowModifications = false)
+    public S3managerpicker getAssets() {
+        return getBean("demo:assets", S3managerpicker.class);
+    }
+```
+
 (Optional) Add CKEditor S3 Manager button
 
 (YAML) Configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level /hippo:namespaces/system/Html/editor:templates/_default_
