@@ -41,6 +41,7 @@ import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.hippoecm.repository.api.HippoSession;
 import org.onehippo.cms7.services.cmscontext.CmsSessionContext;
 import org.onehippo.cms7.utilities.servlet.HttpSessionBoundJcrSessionHolder;
+import org.onehippo.repository.security.SessionUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,7 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     public static final String S3_CREATE_PERMISSION = "xm.s3manager-create.user";
     private final AwsS3ServiceImpl awsS3Service;
     private final Session systemSession;
+    private SessionUser user;
 
     public AwsS3ProxyController(final AwsS3ServiceImpl awsS3Service, final Session systemSession) {
         this.awsS3Service = awsS3Service;
@@ -101,9 +103,9 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
             if (chunkFile != null) {
-                awsS3Service.uploadMultipart(chunkFile, path, index, total);
+                awsS3Service.uploadMultipart(user, chunkFile, path, index, total);
             } else {
-                awsS3Service.uploadSinglepart(uploadFiles, path);
+                awsS3Service.uploadSinglepart(user, uploadFiles, path);
             }
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -131,7 +133,7 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         try {
             final Session userSession = HttpSessionBoundJcrSessionHolder.getOrCreateJcrSession(AwsS3ProxyController.class.getName()+ ".session",
                     httpSession, credentials, systemSession.getRepository()::login);
-
+            user = ((HippoSession) userSession).getUser();
             return new S3Permissions(
                     ((HippoSession)userSession).isUserInRole(S3_USER_PERMISSION),
                     ((HippoSession)userSession).isUserInRole(S3_UPLOAD_PERMISSION),

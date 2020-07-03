@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.tika.Tika;
+import org.onehippo.repository.security.SessionUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
@@ -136,7 +137,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     //for small files
-    public void uploadSinglepart(Attachment multipartFile, final String path) {
+    public void uploadSinglepart(final SessionUser user, Attachment multipartFile, final String path) {
         String uniqueFileName = path + multipartFile.getDataHandler().getName();
         PutObjectRequest por = null;
         try {
@@ -144,6 +145,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             String contentType = multipartFile.getContentType().toString();
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(contentType);
+            objectMetadata.setUserMetadata(getUserMetadata(user));
             objectMetadata.setContentLength(bytes.length);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             por = new PutObjectRequest(bucket, uniqueFileName, byteArrayInputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead);
@@ -154,13 +156,14 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     //for large files
-    public void uploadMultipart(Attachment multipartFile, final String path, final int index, final int total) {
+    public void uploadMultipart(final SessionUser user, Attachment multipartFile, final String path, final int index, final int total) {
         String uniqueFileName = path + multipartFile.getDataHandler().getName();
 
         if (!multipartUploadResultMap.containsKey(uniqueFileName)) {
             String contentType = TIKA.detect(uniqueFileName);
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(contentType);
+            objectMetadata.setUserMetadata(getUserMetadata(user));
             InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, uniqueFileName, objectMetadata).withCannedACL(CannedAccessControlList.PublicRead);
             InitiateMultipartUploadResult initResponse = amazonS3.initiateMultipartUpload(initRequest);
             multipartUploadResultMap.put(uniqueFileName, initResponse);
@@ -194,6 +197,18 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             amazonS3.completeMultipartUpload(compRequest);
             clearMultipartUpload(uniqueFileName);
         }
+    }
+
+    private Map<String, String> getUserMetadata(SessionUser user){
+        Map<String, String> userMeta = new HashMap<String, String>() {{
+            put("source", "brXM");
+        }};
+        if(StringUtils.isNotEmpty(user.getFirstName()) && StringUtils.isNotEmpty(user.getLastName())){
+            userMeta.put("uploader", user.getFirstName()+" "+user.getLastName());
+        } else {
+            userMeta.put("uploader", user.getId());
+        }
+        return userMeta;
     }
 
     private void clearMultipartUpload(final String uniqueFileName) {
