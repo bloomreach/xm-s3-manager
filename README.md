@@ -1,4 +1,4 @@
-##Installation
+## Installation
 
 - In the root pom.xml configure in the properties a version for the plugin and add the bellow dependency both in the dependencyManagement and dependencies section
 ```xml
@@ -117,7 +117,7 @@
         return getBean("demo:assets", S3managerpicker.class);
     }
 ```
-###Daemon module configuration
+### Daemon module configuration
 
 The configuration of the S3 manager daemon module can be accessed and modified from the Console under `/hippo:configuration/hippo:modules/s3manager`
 
@@ -129,7 +129,7 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes |
 
-###(Optional) Add CKEditor S3 Manager button
+### (Optional) Add CKEditor S3 Manager button
 
 If you are editing directly a yaml file, configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level `/hippo:namespaces/system/Html/editor:templates/_default_`
 ```yaml
