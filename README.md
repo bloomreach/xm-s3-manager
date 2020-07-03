@@ -117,6 +117,17 @@
         return getBean("demo:assets", S3managerpicker.class);
     }
 ```
+###Daemon module configuration
+
+The configuration of the S3 manager daemon module can be accessed and modified from the Console under `/hippo:configuration/hippo:modules/s3manager`
+
+| property | type| default value | required| description |
+|--|--|--|--|--|
+|accessKey | string | none | yes | your S3 access key |
+|secretKey | string | none | yes | your S3 secret key |
+|bucket | string | none | yes | your S3 bucket name |
+|presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |
+|expirationTime | long | none | no | used with presigned true and value is expiration in minutes |
 
 ###(Optional) Add CKEditor S3 Manager button
 
