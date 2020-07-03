@@ -129,6 +129,17 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes |
 
+### User Roles
+
+The plugin provides 4 different user roles.
+
+| role | description |
+|--|--|
+|xm.s3manager.user|General role that gives the right to utilise the plugin and make selections. |
+|xm.s3manager-create.user| Role that grants the create folder right. |
+|xm.s3manager-upload.user| Role that grants the upload files to S3 right. |
+|xm.s3manager-delete.user| Role that grants delete rights on any folder/asset. |
+ 
 ### (Optional) Add CKEditor S3 Manager button
 
 If you are editing directly a yaml file, configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level `/hippo:namespaces/system/Html/editor:templates/_default_`
