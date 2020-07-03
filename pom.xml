@@ -17,15 +17,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-<!--  <parent>-->
-<!--    <groupId>org.onehippo.cms7</groupId>-->
-<!--    <artifactId>hippo-cms7-project</artifactId>-->
-<!--    <version>31.1.0</version>-->
-<!--  </parent>-->
   <parent>
     <groupId>org.onehippo.cms7</groupId>
-    <artifactId>hippo-cms7-release</artifactId>
-    <version>14.1.0</version>
+    <artifactId>hippo-cms7-project</artifactId>
+    <version>31.1.0</version>
   </parent>
 
   <groupId>com.bloomreach.xm.manager</groupId>
@@ -36,7 +31,15 @@
   <packaging>pom</packaging>
 
   <properties>
-    <hippo.version>14.1.0</hippo.version>
+    <hippo.hst.version>14.1.0</hippo.hst.version>
+    <hippo.repository.version>14.1.0</hippo.repository.version>
+    <hippo.services.version>14.1.0</hippo.services.version>
+    <cxf.version>3.3.5</cxf.version>
+    <aws.s3.sdk.version>1.11.762</aws.s3.sdk.version>
+    <commons.io.version>2.6</commons.io.version>
+    <commons.lang.version>2.6</commons.lang.version>
+    <tika.core.version>1.24.1</tika.core.version>
+    <jsoup.version>1.13.1</jsoup.version>
   </properties>
 
 <!--  <developers>-->
