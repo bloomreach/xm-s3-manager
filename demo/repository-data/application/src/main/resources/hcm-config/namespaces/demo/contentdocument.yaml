@@ -1,0 +1,144 @@
+definitions:
+  config:
+    /hippo:namespaces/demo/contentdocument:
+      jcr:primaryType: hipposysedit:templatetype
+      jcr:mixinTypes: ['editor:editable', 'mix:referenceable']
+      jcr:uuid: a89621d1-8f92-409e-acc9-449bb33c1405
+      /hipposysedit:nodetype:
+        jcr:primaryType: hippo:handle
+        jcr:mixinTypes: ['mix:referenceable']
+        jcr:uuid: 400d2d8d-a7fc-423e-9900-04fd204d4db4
+        /hipposysedit:nodetype:
+          jcr:primaryType: hipposysedit:nodetype
+          jcr:mixinTypes: ['hipposysedit:remodel', 'mix:referenceable']
+          jcr:uuid: 8126774c-f86b-4842-959e-3762cd3e3a8c
+          hipposysedit:node: true
+          hipposysedit:supertype: ['demo:basedocument', 'hippostd:relaxed', 'hippotranslation:translated']
+          hipposysedit:uri: http://www.demo.com/demo/nt/1.0
+          /title:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: demo:title
+            hipposysedit:primary: false
+            hipposysedit:type: String
+          /introduction:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: demo:introduction
+            hipposysedit:primary: false
+            hipposysedit:type: Text
+          /content:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: demo:content
+            hipposysedit:primary: false
+            hipposysedit:type: hippostd:html
+          /publicationdate:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: demo:publicationdate
+            hipposysedit:primary: false
+            hipposysedit:type: Date
+          /assets:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: demo:assets
+            hipposysedit:primary: false
+            hipposysedit:type: s3manager:s3managerpicker
+      /hipposysedit:prototypes:
+        jcr:primaryType: hipposysedit:prototypeset
+        /hipposysedit:prototype:
+          jcr:primaryType: demo:contentdocument
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: b045114c-9c94-429a-b4c7-430f99ef2cb5
+          demo:introduction: ''
+          demo:publicationdate: 0001-01-01T13:00:00+01:00
+          demo:title: ''
+          hippo:related___pathreference: []
+          hippostd:holder: holder
+          hippostd:state: draft
+          hippostdpubwf:createdBy: ''
+          hippostdpubwf:creationDate: 2014-03-25T10:56:00+01:00
+          hippostdpubwf:lastModificationDate: 2014-03-25T10:56:00+01:00
+          hippostdpubwf:lastModifiedBy: ''
+          hippotranslation:id: document-type-locale-id
+          hippotranslation:locale: document-type-locale
+          /demo:content:
+            jcr:primaryType: hippostd:html
+            hippostd:content: ''
+          /demo:assets:
+            jcr:primaryType: s3manager:s3managerpicker
+            s3manager:assetids: []
+            s3manager:assets: ''
+      /editor:templates:
+        jcr:primaryType: editor:templateset
+        /_default_:
+          jcr:primaryType: frontend:plugincluster
+          frontend:properties: [mode]
+          frontend:references: [wicket.model, model.compareTo, engine, validator.id]
+          frontend:services: [wicket.id, validator.id]
+          type: demo:contentdocument
+          /root:
+            jcr:primaryType: frontend:plugin
+            extension.left: ${cluster.id}.left
+            extension.right: ${cluster.id}.right
+            plugin.class: org.hippoecm.frontend.editor.layout.TwoColumn
+            wicket.extensions: [extension.left, extension.right]
+          /left:
+            jcr:primaryType: frontend:plugin
+            item: ${cluster.id}.left.item
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+            wicket.id: ${cluster.id}.left
+          /right:
+            jcr:primaryType: frontend:plugin
+            item: ${cluster.id}.right.item
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+            wicket.id: ${cluster.id}.right
+          /title:
+            jcr:primaryType: frontend:plugin
+            field: title
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+          /introduction:
+            jcr:primaryType: frontend:plugin
+            field: introduction
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+          /content:
+            jcr:primaryType: frontend:plugin
+            field: content
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+              ckeditor.config.overlayed.json: '{   extraPlugins: ''iframedialog,s3manager''                 }'
+          /publicationdate:
+            jcr:primaryType: frontend:plugin
+            field: publicationdate
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
+            wicket.id: ${cluster.id}.right.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+          /assets:
+            jcr:primaryType: frontend:plugin
+            caption: Assets
+            field: assets
+            hint: ''
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
