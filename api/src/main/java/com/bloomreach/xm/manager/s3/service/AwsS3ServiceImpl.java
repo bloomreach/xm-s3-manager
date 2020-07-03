@@ -121,7 +121,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     public void deleteFiles(List<S3ListItem> items) {
         DeleteObjectsRequest deleteObjectsRequestFiles = new DeleteObjectsRequest(bucket);
-        String[] filesKeys = items.stream().filter(s3ListItem -> s3ListItem.getType().equals(Type.FILE)).map(ListItem::getId).toArray(String[]::new);
+        String[] filesKeys = items.stream().filter(s3ListItem -> s3ListItem.getType().equals(Type.FILE) || s3ListItem.getType().equals(Type.IMAGE)).map(ListItem::getId).toArray(String[]::new);
         if (filesKeys.length > 0) {
             deleteObjectsRequestFiles.withKeys(filesKeys);
             DeleteObjectsResult deleteObjectsResultFiles = amazonS3.deleteObjects(deleteObjectsRequestFiles);
