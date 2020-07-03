@@ -8,4 +8,4 @@ definitions:
       frontend:displayName: S3 Asset
       frontend:extensionPoint: document.field
       frontend:initialHeightInPixels: 400
-      frontend:url: cms/angular/s3manager/index.html#/
+      frontend:url: angular/s3manager/index.html#/
