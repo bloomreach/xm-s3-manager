@@ -35,6 +35,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.amazonaws.HttpMethod;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
@@ -53,9 +54,9 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.services.s3.model.UploadPartResult;
-import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.api.ListItem;
 import com.bloomreach.xm.manager.api.Type;
+import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.model.S3ListItem;
 
 public class AwsS3ServiceImpl implements AwsS3Service {
@@ -194,8 +195,13 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         if (partNumber == total) {
             CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucket, uniqueFileName,
                     initResponse.getUploadId(), eParts.get(uniqueFileName));
-            amazonS3.completeMultipartUpload(compRequest);
-            clearMultipartUpload(uniqueFileName);
+            try {
+                amazonS3.completeMultipartUpload(compRequest);
+            } catch (SdkClientException e){
+                logger.error("An exception occurred while trying to finalise a multi part upload.", e);
+            } finally {
+                clearMultipartUpload(uniqueFileName);
+            }
         }
     }
 
