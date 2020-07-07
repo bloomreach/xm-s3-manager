@@ -337,16 +337,16 @@ class S3Explorer extends React.Component {
 
               actions={[
                 {
+                  tooltip: 'Add to selection',
+                  icon: 'add_to_photos',
+                  onClick: (evt, data) => this.setSelected(data)
+                },
+                {
                   tooltip: 'Delete',
                   icon: 'delete',
                   onClick: (evt, data) => this.delete(data),
                   hidden: !permissions?.deleteAllowed
                 },
-                {
-                  tooltip: 'Add',
-                  icon: 'add_to_photos',
-                  onClick: (evt, data) => this.setSelected(data)
-                }
               ]}
             />
           </DialogContent>
