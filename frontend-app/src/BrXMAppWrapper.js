@@ -116,7 +116,7 @@ class BrXMAppWrapper extends React.Component {
     return <ACLConsumer>{props =>
       props?.useAllowed &&
       <Fragment>
-      <Button variant="contained" disabled={mode !== 'edit'} onClick={event => this.openDialog()}>Manage</Button>
+      <Button color="primary" variant="contained" disabled={mode !== 'edit'} onClick={event => this.openDialog()}>Manage</Button>
       {mode === 'edit' ?
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="droppable">

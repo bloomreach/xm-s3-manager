@@ -8,8 +8,25 @@ import * as UiExtension from "@bloomreach/ui-extension";
 import BrXMExplorerDialogWrapper from "./BrXMExplorerDialogWrapper";
 import BrXMAppWrapper from "./BrXMAppWrapper";
 import {ACLProvider} from "./ACLContext";
+import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 
 const axios = require('axios').default;
+
+const theme = createMuiTheme({
+  palette: {
+    primary:{
+      light: 'rgba(0,0,0,0.05)',
+      main: '#147AC8',
+      dark: '#1265B3',
+    },
+    secondary: {
+      light: 'rgba(0,0,0,0.05)',
+      main: '#147AC8',
+      dark: '#1265B3',
+    },
+  },
+
+});
 
 function getACL(baseUrl) {
   return axios.get('/acl', {
@@ -39,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     acl = await getACL(baseUrl);
 
     const routing = (
+      <MuiThemeProvider theme={theme}>
       <ACLProvider value={acl}>
         <HashRouter>
           <Switch>
@@ -48,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           </Switch>
         </HashRouter>
       </ACLProvider>
+      </MuiThemeProvider>
     );
 
     ReactDOM.render(routing, document.getElementById("root"));
