@@ -119,8 +119,6 @@ export class DropzoneComponent extends React.Component {
    * React 'render'
    */
   render () {
-    const { files } = this.state
-    const { config } = this.props
     const className = (this.props.className) ? 'filepicker dropzone ' + this.props.className : 'filepicker dropzone'
 
     if (!this.props.config.postUrl && this.props.action) {

@@ -19,35 +19,20 @@ class S3UploadDialog extends React.Component {
     this.state = {
       open: false,
       folder: props.folder,
-      asyncSettings: {
-        saveUrl: props.baseURL + '/uploadFiles?path=' + props.folder,
-        chunkSize: (5 * 1024 * 1024)
-      }
     }
 
     // For a full list of possible configurations,
     // please consult http://www.dropzonejs.com/#configuration
     this.djsConfig = {
       paramName: "file", // The name that will be used to transfer the file
-      maxFilesize: 6000, // MB
+      maxFilesize: 160000, // MB
       chunking: true,
       chunkSize: (5 * 1024 * 1024)
     };
 
     this.componentConfig = {
-      postUrl: props.baseURL + '/uploadFiles2?path=' + props.folder,
+      postUrl: props.baseURL + '/uploadFiles?path=' + props.folder,
     };
-
-    // If you want to attach multiple callbacks, simply
-    // create an array filled with all your callbacks.
-    this.callbackArray = [() => console.log('Hi!'), () => console.log('Ho!')];
-
-    // Simple callbacks work too, of course
-    this.callback = () => console.log('Hello!');
-
-    this.success = file => console.log('uploaded', file);
-
-    this.removedfile = file => console.log('removing...', file);
 
     this.dropzone = null;
     this.tableRef = props.table;
@@ -67,17 +52,12 @@ class S3UploadDialog extends React.Component {
 
   render () {
     const {open} = this.state || false;
-    // const {asyncSettings} = this.state || false;
     const config = this.componentConfig;
     const djsConfig = this.djsConfig;
 
     // For a list of all possible events (there are many), see README.md!
     const eventHandlers = {
       init: dz => this.dropzone = dz,
-      drop: this.callbackArray,
-      addedfile: this.callback,
-      success: this.success,
-      removedfile: this.removedfile
     }
     return <Fragment>
       <Button

@@ -50,10 +50,9 @@ public interface ProxyController<T extends ListItem> {
     @POST
     void uploadFile(@Context HttpServletRequest httpServletRequest,
                     @Context HttpServletResponse httpServletResponse,
-                    @Multipart(value = "chunkFile", required = false) Attachment chunkFile,
-                    @Multipart(value = "UploadFiles", required = false) Attachment uploadFiles,
-                    @Multipart(value = "chunkIndex", required = false) Integer index,
-                    @Multipart(value = "totalChunk", required = false) Integer total,
+                    @Multipart(value = "file", required = false) Attachment file,
+                    @Multipart(value = "dzchunkindex", required = false) Integer index,
+                    @Multipart(value = "dztotalchunkcount", required = false) Integer total,
                     @QueryParam(value = "path") String path) throws IOException;
 
     @Path("/list")

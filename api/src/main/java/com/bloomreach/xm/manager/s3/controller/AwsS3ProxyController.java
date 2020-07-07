@@ -95,39 +95,16 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public void uploadFile(@Context HttpServletRequest httpServletRequest,
                            @Context HttpServletResponse httpServletResponse,
-                           @Multipart(value = "chunkFile", required = false) Attachment chunkFile,
-                           @Multipart(value = "UploadFiles", required = false) Attachment uploadFiles,
-                           @Multipart(value = "chunkIndex", required = false) Integer index,
-                           @Multipart(value = "totalChunk", required = false) Integer total,
-                           @QueryParam(value = "path") String path) throws IOException {
-        S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
-        if(s3Permissions.isUploadAllowed()) {
-            if (chunkFile != null) {
-                awsS3Service.uploadMultipart(user, chunkFile, path, index, total);
-            } else {
-                awsS3Service.uploadSinglepart(user, uploadFiles, path);
-            }
-        } else {
-            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-    }
-
-    @Path("/uploadFiles2")
-    @POST
-    @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public void uploadFileWithDropzoneJs(@Context HttpServletRequest httpServletRequest,
-                           @Context HttpServletResponse httpServletResponse,
-                           @Multipart(value = "file", required = false) Attachment chunkFile,
-                           @Multipart(value = "UploadFiles", required = false) Attachment uploadFiles,
+                           @Multipart(value = "file", required = false) Attachment file,
                            @Multipart(value = "dzchunkindex", required = false) Integer index,
                            @Multipart(value = "dztotalchunkcount", required = false) Integer total,
                            @QueryParam(value = "path") String path) throws IOException {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
-            if (chunkFile != null) {
-                awsS3Service.uploadMultipart(user, chunkFile, path, index, total);
+            if (total != null) {
+                awsS3Service.uploadMultipart(user, file, path, index, total);
             } else {
-                awsS3Service.uploadSinglepart(user, uploadFiles, path);
+                awsS3Service.uploadSinglepart(user, file, path);
             }
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
