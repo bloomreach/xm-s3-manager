@@ -12,7 +12,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Chip from "@material-ui/core/Chip";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AttachmentIcon from '@material-ui/icons/Attachment';
+import DescriptionIcon from '@material-ui/icons/Description';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import FolderIcon from '@material-ui/icons/Folder';
@@ -241,7 +241,7 @@ class S3Explorer extends React.Component {
                       onClick={(event) => row.type === 'FOLDER' ? this.navigateToFolderAndAddToBreadCrumb(row) : openInNewTab(row.link)}>
                       <ListItemIcon>
                         {row.type === 'FOLDER' ? <FolderIcon/> : row.type === 'IMAGE' ?
-                          <Avatar alt={row.name} src={row.link}/> : <AttachmentIcon/>
+                          <Avatar alt={row.name} src={row.link}/> : <DescriptionIcon/>
                         }
                       </ListItemIcon>
                       <ListItemText style={{cursor: 'pointer'}}
@@ -357,7 +357,7 @@ class S3Explorer extends React.Component {
                       onClick={() => this.deleteSelected(value)}
                       onDelete={() => this.deleteSelected(value)}
                       variant="outlined"
-                      icon={<AttachmentIcon/>}
+                      icon={<DescriptionIcon/>}
                       size={'small'}
                       title={value.name}
                       label={value.name.replace(/^(.{5}[^\s]*).*/, "$1")}

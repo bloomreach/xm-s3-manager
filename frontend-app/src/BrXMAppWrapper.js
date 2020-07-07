@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-import AttachmentIcon from "@material-ui/icons/Attachment";
+import DescriptionIcon from '@material-ui/icons/Description';
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import Chip from "@material-ui/core/Chip";
 import {ACLConsumer} from "./ACLContext";
@@ -133,7 +133,7 @@ class BrXMAppWrapper extends React.Component {
                               {...provided.dragHandleProps} key={index}
                               size={'large'}
                               variant="outlined"
-                              icon={<AttachmentIcon/>}
+                              icon={<DescriptionIcon/>}
                               label={file.name}
                               onClick={() => window.open(file.link, "_blank")}
                               onDelete={() => this.onDelete(file)}/>
@@ -152,7 +152,7 @@ class BrXMAppWrapper extends React.Component {
               <Chip key={index}
                     size={'large'}
                     variant="outlined"
-                    icon={<AttachmentIcon/>}
+                    icon={<DescriptionIcon/>}
                     label={file.name}
                     onClick={() => window.open(file.link, "_blank")}
               />
