@@ -319,6 +319,9 @@ class S3Explorer extends React.Component {
                           <TextField autoFocus inputRef={this.createFolderRef} label="Folder name" variant="outlined"/>
                         </DialogContent>
                         <DialogActions>
+                          <Button onClick={this.closeCreateFolderDialog} color="primary">
+                            Cancel
+                          </Button>
                           <Button onClick={this.okCreateFolderDialog} color="primary">
                             OK
                           </Button>
