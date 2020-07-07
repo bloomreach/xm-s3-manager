@@ -341,7 +341,7 @@ class S3Explorer extends React.Component {
                 },
                 {
                   tooltip: 'Add',
-                  icon: 'playlist_add_check',
+                  icon: 'add_to_photos',
                   onClick: (evt, data) => this.setSelected(data)
                 }
               ]}
