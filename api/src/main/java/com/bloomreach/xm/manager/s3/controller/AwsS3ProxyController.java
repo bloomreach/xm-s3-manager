@@ -90,6 +90,13 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         }
     }
 
+    @Path("/clear")
+    @POST
+    public void clear(Map<String, String> variables) {
+        final String uniqueFileName = variables.get("path") + variables.get("filename");
+        awsS3Service.abortMultipartUploadAndClear(uniqueFileName);
+    }
+
     @Path("/uploadFiles")
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})

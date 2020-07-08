@@ -162,9 +162,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         String uniqueFileName = path + multipartFile.getDataHandler().getName();
 
         if(eParts.containsKey(uniqueFileName) && eParts.get(uniqueFileName).get(eParts.get(uniqueFileName).size()-1).getPartNumber() > index + 1){
-            InitiateMultipartUploadResult result = multipartUploadResultMap.get(uniqueFileName);
-            amazonS3.abortMultipartUpload(new AbortMultipartUploadRequest(bucket, result.getKey(), result.getUploadId()));
-            clearMultipartUpload(uniqueFileName);
+            abortMultipartUploadAndClear(uniqueFileName);
         }
 
         if (!multipartUploadResultMap.containsKey(uniqueFileName)) {
@@ -210,6 +208,14 @@ public class AwsS3ServiceImpl implements AwsS3Service {
                 clearMultipartUpload(uniqueFileName);
             }
         }
+    }
+
+    public void abortMultipartUploadAndClear(final String uniqueFileName){
+        InitiateMultipartUploadResult result = multipartUploadResultMap.get(uniqueFileName);
+        if(result != null) {
+            amazonS3.abortMultipartUpload(new AbortMultipartUploadRequest(bucket, result.getKey(), result.getUploadId()));
+        }
+        clearMultipartUpload(uniqueFileName);
     }
 
     private Map<String, String> getUserMetadata(SessionUser user){

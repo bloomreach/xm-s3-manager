@@ -9,6 +9,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import './S3UploadDialog.css';
 import DropzoneComponent from "./react-dropzone";
 
+const axios = require('axios').default;
+
 class S3UploadDialog extends React.Component {
 
   constructor (props) {
@@ -27,7 +29,7 @@ class S3UploadDialog extends React.Component {
       paramName: "file", // The name that will be used to transfer the file
       maxFilesize: 160000, // MB
       chunking: true,
-      chunkSize: (5 * 1024 * 1024)
+      chunkSize: (5 * 1024 * 1024),
     };
 
     this.componentConfig = {
@@ -35,6 +37,19 @@ class S3UploadDialog extends React.Component {
     };
 
     this.dropzone = null;
+
+    this.informbackend = file => {
+      return axios({
+        baseURL: props.baseURL,
+        method: 'POST',
+        url: '/clear',
+        data: {
+          path: props.folder,
+          filename: file.name
+        },
+      });
+    }
+
     this.tableRef = props.table;
   }
 
@@ -58,6 +73,7 @@ class S3UploadDialog extends React.Component {
     // For a list of all possible events (there are many), see README.md!
     const eventHandlers = {
       init: dz => this.dropzone = dz,
+      error: this.informbackend
     }
     return <Fragment>
       <Button
