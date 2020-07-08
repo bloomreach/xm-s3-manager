@@ -37,6 +37,7 @@ import org.springframework.util.MultiValueMap;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
@@ -68,7 +69,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final boolean presigned;
     private final long expTime;
     private final Map<String, InitiateMultipartUploadResult> multipartUploadResultMap = new HashMap<>();
-    private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap();
+    private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap<>();
 
     public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final long expTime) {
         this.bucket = bucket;
@@ -159,6 +160,12 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     //for large files
     public void uploadMultipart(final SessionUser user, Attachment multipartFile, final String path, final int index, final int total) {
         String uniqueFileName = path + multipartFile.getDataHandler().getName();
+
+        if(eParts.containsKey(uniqueFileName) && eParts.get(uniqueFileName).get(eParts.get(uniqueFileName).size()-1).getPartNumber() > index + 1){
+            InitiateMultipartUploadResult result = multipartUploadResultMap.get(uniqueFileName);
+            amazonS3.abortMultipartUpload(new AbortMultipartUploadRequest(bucket, result.getKey(), result.getUploadId()));
+            clearMultipartUpload(uniqueFileName);
+        }
 
         if (!multipartUploadResultMap.containsKey(uniqueFileName)) {
             String contentType = TIKA.detect(uniqueFileName);
