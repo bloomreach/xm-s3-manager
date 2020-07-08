@@ -15,6 +15,8 @@
  */
 package com.bloomreach.xm.manager;
 
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -25,7 +27,14 @@ import org.onehippo.repository.jaxrs.RepositoryJaxrsService;
 import org.onehippo.repository.jaxrs.api.ManagedUserSessionInvoker;
 import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
+import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
+import com.amazonaws.services.s3.model.MultipartUpload;
+import com.amazonaws.services.s3.model.MultipartUploadListing;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
@@ -36,7 +45,9 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 @ProvidesService(types = {AwsS3Service.class})
 public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
+    private static final Logger logger = LoggerFactory.getLogger(S3ManagerDaemonModule.class);
     private static final String END_POINT = "/s3manager";
+    private AwsService awsService;
     private AwsS3Service awsS3Service;
     private String accessKey;
     private String secretKey;
@@ -58,7 +69,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     @Override
     public void doInitialize(final Session session) throws RepositoryException {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
-        AwsService awsService = new AwsService(awsCredentials);
+        awsService = new AwsService(awsCredentials);
         awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session);
 
@@ -82,9 +93,20 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void onConfigurationChange(final Node moduleConfig) throws RepositoryException {
-        doShutdown();
-        doConfigure(moduleConfig);
-        doInitialize(moduleConfig.getSession());
+        ListMultipartUploadsRequest allMultipartUploadsRequest = new ListMultipartUploadsRequest(bucket);
+        MultipartUploadListing multipartUploadListing = awsService.getS3client().listMultipartUploads(allMultipartUploadsRequest);
+        List<MultipartUpload> uploads = multipartUploadListing.getMultipartUploads();
+        try {
+            for (MultipartUpload u : uploads) {
+                awsService.getS3client().abortMultipartUpload(new AbortMultipartUploadRequest(bucket, u.getKey(), u.getUploadId()));
+            }
+        } catch (SdkClientException e) {
+            logger.error("An exception occurred while aborting in-progress multi part uploads before module reconfiguration.", e);
+        } finally {
+            doShutdown();
+            doConfigure(moduleConfig);
+            doInitialize(moduleConfig.getSession());
+        }
     }
 
 }
