@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bloomreach.xm.manager;
+package com.bloomreach.xm.manager.s3.module;
 
 import java.util.List;
 

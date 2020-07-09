@@ -2,7 +2,7 @@ definitions:
   config:
     /hippo:configuration/hippo:derivatives/s3manager:
       jcr:primaryType: hipposys:deriveddefinition
-      hipposys:classname: com.bloomreach.xm.manager.derived.S3DataFunction
+      hipposys:classname: com.bloomreach.xm.manager.s3.derived.S3DataFunction
       hipposys:nodetype: s3manager:s3managerpicker
       hipposys:serialver: 1
       /hipposys:accessed:
