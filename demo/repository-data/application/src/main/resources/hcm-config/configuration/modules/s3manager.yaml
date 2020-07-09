@@ -1,0 +1,4 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/s3manager/hippo:moduleconfig:
+      singlePostUploadOperations: [com.bloomreach.xm.manager.s3.TestOperation]

@@ -15,11 +15,14 @@
  */
 package com.bloomreach.xm.manager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.repository.jaxrs.CXFRepositoryJaxrsEndpoint;
@@ -35,11 +38,12 @@ import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
 import com.amazonaws.services.s3.model.MultipartUpload;
 import com.amazonaws.services.s3.model.MultipartUploadListing;
+import com.bloomreach.xm.manager.api.S3PostUploadOperation;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
+import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.service.AwsService;
-import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @ProvidesService(types = {AwsS3Service.class})
@@ -49,6 +53,8 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private static final String END_POINT = "/s3manager";
     private AwsService awsService;
     private AwsS3Service awsS3Service;
+    List<S3PostUploadOperation> multiPostUploadOperations = new LinkedList<>();
+    List<S3PostUploadOperation> singlePostUploadOperations = new LinkedList<>();
     private String accessKey;
     private String secretKey;
     private String bucket;
@@ -64,13 +70,31 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         if(moduleConfig.hasProperty("expirationTime")) {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
+
+        initPostProcessors(moduleConfig, "multiPostUploadOperations", multiPostUploadOperations);
+        initPostProcessors(moduleConfig, "singlePostUploadOperations", singlePostUploadOperations);
+    }
+
+    private void initPostProcessors(final Node moduleConfig, final String property, final List<S3PostUploadOperation> processList) throws RepositoryException{
+        if(moduleConfig.hasProperty(property)){
+            Value[] postProcesses = moduleConfig.getProperty(property).getValues();
+            try {
+                for (Value className : postProcesses) {
+                    Class<? extends S3PostUploadOperation> moduleClass = (Class<? extends S3PostUploadOperation>) Class.forName(className.getString());
+                    S3PostUploadOperation service = moduleClass.getConstructor().newInstance();
+                    processList.add(service);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
+                logger.error("Error during post-processor instantiation.", e);
+            }
+        }
     }
 
     @Override
     public void doInitialize(final Session session) throws RepositoryException {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
         awsService = new AwsService(awsCredentials);
-        awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, expTime);
+        awsS3Service = new AwsS3ServiceImpl(awsService, multiPostUploadOperations, singlePostUploadOperations, bucket, presigned, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session);
 
         HippoServiceRegistry.register(awsS3Service, AwsS3Service.class);

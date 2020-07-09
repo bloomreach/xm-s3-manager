@@ -40,6 +40,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
+import com.amazonaws.services.s3.model.CompleteMultipartUploadResult;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsResult;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
@@ -56,6 +57,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.services.s3.model.UploadPartResult;
 import com.bloomreach.xm.manager.api.ListItem;
+import com.bloomreach.xm.manager.api.S3PostUploadOperation;
 import com.bloomreach.xm.manager.api.Type;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.model.S3ListItem;
@@ -64,6 +66,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
     private static final Logger logger = LoggerFactory.getLogger(AwsS3ServiceImpl.class);
     private static final Tika TIKA = new Tika();
+    private static List<S3PostUploadOperation> multiPostUploadOperations;
+    private static List<S3PostUploadOperation> singlePostUploadOperations;
     private final String bucket;
     private final AmazonS3 amazonS3;
     private final boolean presigned;
@@ -71,11 +75,13 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final Map<String, InitiateMultipartUploadResult> multipartUploadResultMap = new HashMap<>();
     private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap<>();
 
-    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final long expTime) {
+    public AwsS3ServiceImpl(final AwsService awsService, final List<S3PostUploadOperation> multiPostUploadOperations, final List<S3PostUploadOperation> singlePostUploadOperations, final String bucket, final boolean presigned, final long expTime) {
         this.bucket = bucket;
         amazonS3 = awsService.getS3client();
         this.presigned = presigned;
         this.expTime = expTime;
+        this.multiPostUploadOperations = multiPostUploadOperations;
+        this.singlePostUploadOperations = singlePostUploadOperations;
     }
 
     @Override
@@ -154,7 +160,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         } catch (IOException e) {
             logger.error("An exception occurred during a single part upload to S3.", e);
         }
-        amazonS3.putObject(por);
+        PutObjectResult result = amazonS3.putObject(por);
+        postProcessSingleResult(result);
     }
 
     //for large files
@@ -201,7 +208,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucket, uniqueFileName,
                     initResponse.getUploadId(), eParts.get(uniqueFileName));
             try {
-                amazonS3.completeMultipartUpload(compRequest);
+                CompleteMultipartUploadResult result = amazonS3.completeMultipartUpload(compRequest);
+                postProcessMultiResult(result);
             } catch (SdkClientException e){
                 logger.error("An exception occurred while trying to finalise a multi part upload.", e);
             } finally {
@@ -235,4 +243,17 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         eParts.remove(uniqueFileName);
     }
 
+    @SuppressWarnings("unchecked")
+    private void postProcessMultiResult(final CompleteMultipartUploadResult result) {
+        for(S3PostUploadOperation<CompleteMultipartUploadResult> operation : multiPostUploadOperations){
+            operation.process(amazonS3, result);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void postProcessSingleResult(final PutObjectResult result) {
+        for(S3PostUploadOperation<PutObjectResult> operation : singlePostUploadOperations){
+            operation.process(amazonS3, result);
+        }
+    }
 }
