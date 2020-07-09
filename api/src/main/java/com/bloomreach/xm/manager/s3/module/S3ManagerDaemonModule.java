@@ -24,6 +24,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
+import org.apache.commons.lang.StringUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.repository.jaxrs.CXFRepositoryJaxrsEndpoint;
 import org.onehippo.repository.jaxrs.RepositoryJaxrsService;
@@ -34,11 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
 import com.amazonaws.services.s3.model.MultipartUpload;
 import com.amazonaws.services.s3.model.MultipartUploadListing;
-import com.bloomreach.xm.manager.api.S3PostUploadOperation;
+import com.bloomreach.xm.manager.api.PostUploadOperation;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
@@ -53,8 +55,8 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private static final String END_POINT = "/s3manager";
     private AwsService awsService;
     private AwsS3Service awsS3Service;
-    List<S3PostUploadOperation> multiPostUploadOperations = new LinkedList<>();
-    List<S3PostUploadOperation> singlePostUploadOperations = new LinkedList<>();
+    Value[] multiPostOperations;
+    Value[] singlePostOperations;
     private String accessKey;
     private String secretKey;
     private String bucket;
@@ -71,22 +73,25 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
 
-        initPostProcessors(moduleConfig, "multiPostUploadOperations", multiPostUploadOperations);
-        initPostProcessors(moduleConfig, "singlePostUploadOperations", singlePostUploadOperations);
+        if(moduleConfig.hasProperty("multiPostUploadOperations")) {
+            multiPostOperations = moduleConfig.getProperty("multiPostUploadOperations").getValues();
+        }
+        if(moduleConfig.hasProperty("singlePostUploadOperations")) {
+            singlePostOperations = moduleConfig.getProperty("singlePostUploadOperations").getValues();
+        }
     }
 
-    private void initPostProcessors(final Node moduleConfig, final String property, final List<S3PostUploadOperation> processList) throws RepositoryException{
-        if(moduleConfig.hasProperty(property)){
-            Value[] postProcesses = moduleConfig.getProperty(property).getValues();
-            try {
-                for (Value className : postProcesses) {
-                    Class<? extends S3PostUploadOperation> moduleClass = (Class<? extends S3PostUploadOperation>) Class.forName(className.getString());
-                    S3PostUploadOperation service = moduleClass.getConstructor().newInstance();
+    private void initPostProcessors(final Value[] postProcesses, final List<PostUploadOperation> processList, final AmazonS3 client) throws RepositoryException{
+        try {
+            for (Value className : postProcesses) {
+                if (StringUtils.isNotBlank(className.getString())) {
+                    Class<? extends PostUploadOperation> moduleClass = (Class<? extends PostUploadOperation>) Class.forName(className.getString());
+                    PostUploadOperation service = moduleClass.getConstructor(AmazonS3.class).newInstance(client);
                     processList.add(service);
                 }
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
-                logger.error("Error during post-processor instantiation.", e);
             }
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
+            logger.error("Error during post-processor instantiation.", e);
         }
     }
 
@@ -94,6 +99,14 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     public void doInitialize(final Session session) throws RepositoryException {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
         awsService = new AwsService(awsCredentials);
+        List<PostUploadOperation> multiPostUploadOperations = new LinkedList<>();
+        List<PostUploadOperation> singlePostUploadOperations = new LinkedList<>();
+        if(multiPostOperations != null) {
+            initPostProcessors(multiPostOperations, multiPostUploadOperations, awsService.getS3client());
+        }
+        if(singlePostOperations!=null) {
+            initPostProcessors(singlePostOperations, singlePostUploadOperations, awsService.getS3client());
+        }
         awsS3Service = new AwsS3ServiceImpl(awsService, multiPostUploadOperations, singlePostUploadOperations, bucket, presigned, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session);
 
