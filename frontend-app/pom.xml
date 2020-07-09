@@ -81,15 +81,15 @@
         </executions>
         <configuration>
           <filesets>
-            <fileset>
-              <directory>node</directory>
-            </fileset>
-            <fileset>
-              <directory>node_modules</directory>
-            </fileset>
-            <fileset>
-              <directory>build</directory>
-            </fileset>
+<!--            <fileset>-->
+<!--              <directory>node</directory>-->
+<!--            </fileset>-->
+<!--            <fileset>-->
+<!--              <directory>node_modules</directory>-->
+<!--            </fileset>-->
+<!--            <fileset>-->
+<!--              <directory>build</directory>-->
+<!--            </fileset>-->
           </filesets>
         </configuration>
       </plugin>
