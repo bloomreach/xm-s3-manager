@@ -21,6 +21,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.repository.jaxrs.CXFRepositoryJaxrsEndpoint;
 import org.onehippo.repository.jaxrs.RepositoryJaxrsService;
@@ -47,6 +48,8 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     private static final Logger logger = LoggerFactory.getLogger(S3ManagerDaemonModule.class);
     private static final String END_POINT = "/s3manager";
+    private static final String XM_S3_ACCESS_KEY = "XM_S3_ACCESS_KEY";
+    private static final String XM_S3_SECRET_KEY = "XM_S3_SECRET_KEY";
     private AwsService awsService;
     private AwsS3Service awsS3Service;
     private String accessKey;
@@ -57,8 +60,22 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doConfigure(final Node moduleConfig) throws RepositoryException {
-        accessKey = moduleConfig.getProperty("accessKey").getString();
-        secretKey = moduleConfig.getProperty("secretKey").getString();
+        if(StringUtils.isNotEmpty(System.getenv(XM_S3_ACCESS_KEY))){
+            accessKey = System.getenv(XM_S3_ACCESS_KEY);
+        } else if (StringUtils.isNotEmpty(System.getProperty(XM_S3_ACCESS_KEY))){
+            accessKey = System.getProperty(XM_S3_ACCESS_KEY);
+        } else if (moduleConfig.hasProperty("accessKey")) {
+            accessKey = moduleConfig.getProperty("accessKey").getString();
+        }
+
+        if(StringUtils.isNotEmpty(System.getenv(XM_S3_SECRET_KEY))){
+            secretKey = System.getenv(XM_S3_SECRET_KEY);
+        } else if (StringUtils.isNotEmpty(System.getProperty(XM_S3_SECRET_KEY))){
+            secretKey = System.getProperty(XM_S3_SECRET_KEY);
+        } else if (moduleConfig.hasProperty("secretKey")) {
+            secretKey = moduleConfig.getProperty("secretKey").getString();
+        }
+
         bucket = moduleConfig.getProperty("bucket").getString();
         presigned = moduleConfig.getProperty("presigned").getBoolean();
         if(moduleConfig.hasProperty("expirationTime")) {
