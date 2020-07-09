@@ -117,9 +117,14 @@
         return getBean("demo:assets", S3managerpicker.class);
     }
 ```
+---
 ### Daemon module configuration
 
 The configuration of the S3 manager daemon module can be accessed and modified from the Console under `/hippo:configuration/hippo:modules/s3manager`
+
+---
+> **Note :** The daemon module can be reconfigured while the application is running.The changes will be picked up without the need to restart it. **However, all uploads in progress will be aborted.** 
+---
 
 | property | type| default value | required| description |
 |--|--|--|--|--|
@@ -128,7 +133,7 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |bucket | string | none | yes | your S3 bucket name |
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes |
-
+---
 ### User Roles
 
 The plugin provides 4 different user roles.
@@ -139,7 +144,7 @@ The plugin provides 4 different user roles.
 |xm.s3manager-create.user| Role that grants the create folder right. |
 |xm.s3manager-upload.user| Role that grants the upload files to S3 right. |
 |xm.s3manager-delete.user| Role that grants delete rights on any folder/asset. |
- 
+--- 
 ### (Optional) Add CKEditor S3 Manager button
 
 If you are editing directly a yaml file, configure the below property on the /cluster.options: node of an RTF field in a document type of your project or on global level `/hippo:namespaces/system/Html/editor:templates/_default_`
@@ -157,3 +162,42 @@ ckeditor.config.overlayed.json: {   extraPlugins: 'iframedialog,s3manager'      
 ```properties
     default.hst.contentrewriter.class = com.bloomreach.xm.manager.rewriter.S3AssetsLinkRewriter
 ```
+
+---
+
+### S3 Manager End User documentation
+
+#### Overview
+![Plugins](images/plugins.png)
+1. S3 asset manager as compound on document level.
+1. S3 asset manager as ckeditor plugin for RTF field.
+
+#### Compound OpenUI field
+![Manager options](images/openui-options.png)
+1. Add selected assets collection to documents field.
+    1. Selected assets after addition become disabled to avoid duplicate selection.
+    1. Manage currently selected assets.
+1. Delete selected assets directly from your S3.
+1. Create a new folder in your S3 in the current directory.
+1. Upload new assets directly to your S3 in the current directory from your local storage.
+
+#### ckeditor plugin
+
+> Note : ckeditor though uses the same UI operates as a **single select**.
+
+The plugin supports two possible operations
+* anchor tag generation with `href` to S3 asset
+* img tag generation with `src` to S3 asset
+
+![ckeditor options](images/ckeditor-options.png)
+1. S3 plugin icon
+1. Selected text that was transformed to an anchor with `href` to an S3 asset.
+1. Image tag that was generated with `src` from an S3 image asset.
+
+Anchor generation
+1. Select the desired text from the RTF field and click on the S3 icon.
+1. Select an asset, add it to the collection and click OK.
+
+Image generation
+1. Without selecting any text click on the S3 icon.
+1. Select an image asset, add it to the collection and click OK.
