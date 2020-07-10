@@ -42,14 +42,20 @@
     <jsoup.version>1.13.1</jsoup.version>
   </properties>
 
-<!--  <developers>-->
-<!--    <developer>-->
-<!--      <id>ksalic</id>-->
-<!--      <name>Kenan Salic</name>-->
-<!--      <organization>bloomreach</organization>-->
-<!--      <email>kenan.salic@bloomreach.com</email>-->
-<!--    </developer>-->
-<!--  </developers>-->
+  <developers>
+    <developer>
+      <id>ksalic</id>
+      <name>Kenan Salic</name>
+      <organization>bloomreach</organization>
+      <email>kenan.salic@bloomreach.com</email>
+    </developer>
+    <developer>
+      <id>ekaramoulas</id>
+      <name>Lef Karamoulas</name>
+      <organization>bloomreach</organization>
+      <email>lef.karamoulas@bloomreach.com</email>
+    </developer>
+  </developers>
 
   <licenses>
     <license>
@@ -59,25 +65,25 @@
     </license>
   </licenses>
 
-<!--  <scm>-->
-<!--    <connection></connection>-->
-<!--    <developerConnection></developerConnection>-->
-<!--    <url></url>-->
-<!--    <tag></tag>-->
-<!--  </scm>-->
+  <scm>
+    <connection>scm:git:git@github.com:bloomreach/xm-s3-manager.git</connection>
+    <developerConnection>scm:git:git@github.com:bloomreach/xm-s3-manager.git</developerConnection>
+    <url>https://github.com/bloomreach/xm-s3-manager.git</url>
+    <tag>xm-s3-manager-0.1.0</tag>
+  </scm>
 
-<!--  <distributionManagement>-->
-<!--    <repository>-->
-<!--      <name>Hippo Maven 2 Forge Repository</name>-->
-<!--      <id>hippo-maven2-forge</id>-->
-<!--      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>-->
-<!--      <uniqueVersion>false</uniqueVersion>-->
-<!--    </repository>-->
-<!--  </distributionManagement>-->
+  <distributionManagement>
+    <repository>
+      <name>Hippo Maven 2 Forge Repository</name>
+      <id>hippo-maven2-forge</id>
+      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
 
-<!--  <issueManagement>-->
-<!--    <url>https://issues.onehippo.com/browse/HIPFORGE</url>-->
-<!--  </issueManagement>-->
+  <issueManagement>
+    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
+  </issueManagement>
 
   <organization>
     <name>Bloomreach</name>
