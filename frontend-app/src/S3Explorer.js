@@ -203,6 +203,8 @@ class S3Explorer extends React.Component {
   determineDisabled(obj, list){
     if(this.props.context==='ckeditor' && this.state.currentSelection.length > 0){
       return !this.containsObject(obj, this.state.currentSelection);
+    } else if (this.props.context==='ckeditor' && this.state.selected.length > 0) {
+      return true;
     } else {
       return this.containsObject(obj, list);
     }

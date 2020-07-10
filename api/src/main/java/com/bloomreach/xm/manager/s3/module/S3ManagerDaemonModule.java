@@ -138,10 +138,10 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void onConfigurationChange(final Node moduleConfig) throws RepositoryException {
-        ListMultipartUploadsRequest allMultipartUploadsRequest = new ListMultipartUploadsRequest(bucket);
-        MultipartUploadListing multipartUploadListing = awsService.getS3client().listMultipartUploads(allMultipartUploadsRequest);
-        List<MultipartUpload> uploads = multipartUploadListing.getMultipartUploads();
         try {
+            ListMultipartUploadsRequest allMultipartUploadsRequest = new ListMultipartUploadsRequest(bucket);
+            MultipartUploadListing multipartUploadListing = awsService.getS3client().listMultipartUploads(allMultipartUploadsRequest);
+            List<MultipartUpload> uploads = multipartUploadListing.getMultipartUploads();
             for (MultipartUpload u : uploads) {
                 awsService.getS3client().abortMultipartUpload(new AbortMultipartUploadRequest(bucket, u.getKey(), u.getUploadId()));
             }
