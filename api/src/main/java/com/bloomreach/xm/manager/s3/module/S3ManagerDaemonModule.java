@@ -15,6 +15,7 @@
  */
 package com.bloomreach.xm.manager.s3.module;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -37,10 +38,11 @@ import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
 import com.amazonaws.services.s3.model.MultipartUpload;
 import com.amazonaws.services.s3.model.MultipartUploadListing;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
+import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
+import com.bloomreach.xm.manager.s3.model.DZConfiguration;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.service.AwsService;
-import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @ProvidesService(types = {AwsS3Service.class})
@@ -57,6 +59,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private String bucket;
     private boolean presigned;
     private long expTime;
+    private DZConfiguration dzConfiguration;
 
     @Override
     protected void doConfigure(final Node moduleConfig) throws RepositoryException {
@@ -81,6 +84,31 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         if(moduleConfig.hasProperty("expirationTime")) {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
+
+        extractDZConfiguration(moduleConfig);
+    }
+
+    private void extractDZConfiguration(final Node moduleConfig) throws RepositoryException {
+        String[] allowedExtensions = moduleConfig.hasProperty("allowedExtensions") ?
+                Arrays.stream(moduleConfig.getProperty("allowedExtensions").getValues()).map(value -> {
+                    try {
+                        return value.getString();
+                    } catch (RepositoryException e) {
+                        logger.error("An exception occurred while reading dz configuration for allowed extensions.", e);
+                    }
+                    return null;
+                }).toArray(String[]::new) : null;
+
+        long maxFileSize = moduleConfig.hasProperty("maxFileSize") ?
+                moduleConfig.getProperty("maxFileSize").getValue().getLong() : 160000;
+
+        long chunkSize = moduleConfig.hasProperty("chunkSize") ?
+            moduleConfig.getProperty("chunkSize").getValue().getLong() : 5;
+
+        long timeout = moduleConfig.hasProperty("timeout") ?
+            moduleConfig.getProperty("timeout").getValue().getLong() : 0;
+
+        dzConfiguration = new DZConfiguration(allowedExtensions, maxFileSize, chunkSize, timeout);
     }
 
     @Override
@@ -88,7 +116,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
         awsService = new AwsService(awsCredentials);
         awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, expTime);
-        AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session);
+        AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session, dzConfiguration);
 
         HippoServiceRegistry.register(awsS3Service, AwsS3Service.class);
         ManagedUserSessionInvoker managedUserSessionInvoker = new ManagedUserSessionInvoker(session);

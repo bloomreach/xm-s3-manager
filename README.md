@@ -133,6 +133,10 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |bucket | string | none | yes | your S3 bucket name | |
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering | |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes | |
+|allowedExtensions | multi string | null | no | optionally define the list of allowed mime types or extensions for the upload operation `Eg.: image/*, application/pdf, .psd` | |
+|maxFileSize | long | 160000 | no | the maximum allowed file size in MB. | |
+|chunkSize | long | 5 | no | the size of chunks in MB for a multi part upload. | |
+|timeout | long | 0 | no | the time a call will timeout in milliseconds. 0 is the value for no timeout. | |
 ---
 ### User Roles
 
