@@ -126,13 +126,17 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 > **Note :** The daemon module can be reconfigured while the application is running.The changes will be picked up without the need to restart it. **However, all uploads in progress will be aborted.** 
 ---
 
-| property | type| default value | required| description |
-|--|--|--|--|--|
-|accessKey | string | none | yes | your S3 access key |
-|secretKey | string | none | yes | your S3 secret key |
-|bucket | string | none | yes | your S3 bucket name |
-|presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |
-|expirationTime | long | none | no | used with presigned true and value is expiration in minutes |
+| property | type| default value | required| description | notes |
+|--|--|--|--|--|--|
+|accessKey | string | none | yes | your S3 access key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_ACCESS_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
+|secretKey | string | none | yes | your S3 secret key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_SECRET_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
+|bucket | string | none | yes | your S3 bucket name | |
+|presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering | |
+|expirationTime | long | none | no | used with presigned true and value is expiration in minutes | |
+|allowedExtensions | multi string | null | no | optionally define the list of allowed mime types or extensions for the upload operation `Eg.: image/*, application/pdf, .psd` | |
+|maxFileSize | long | 160000 | no | the maximum allowed file size in MB. | |
+|chunkSize | long | 5 | no | the size of chunks in MB for a multi part upload. | |
+|timeout | long | 0 | no | the time a call will timeout in milliseconds. 0 is the value for no timeout. | |
 ---
 ### User Roles
 

@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bloomreach.xm.manager.api.ProxyController;
+import com.bloomreach.xm.manager.s3.model.DZConfiguration;
 import com.bloomreach.xm.manager.s3.model.S3ListItem;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.model.S3Permissions;
@@ -61,10 +62,12 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     private final AwsS3ServiceImpl awsS3Service;
     private final Session systemSession;
     private SessionUser user;
+    private static DZConfiguration dzConfiguration;
 
-    public AwsS3ProxyController(final AwsS3ServiceImpl awsS3Service, final Session systemSession) {
+    public AwsS3ProxyController(final AwsS3ServiceImpl awsS3Service, final Session systemSession, final DZConfiguration dzConfiguration) {
         this.awsS3Service = awsS3Service;
         this.systemSession =systemSession;
+        AwsS3ProxyController.dzConfiguration = dzConfiguration;
     }
 
     @Path("/deleteFiles")
@@ -151,5 +154,12 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
 
         }
         return new S3Permissions(false, false, false, false);
+    }
+
+    @Path("/dzconf")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public DZConfiguration getDZConfiguration(){
+        return dzConfiguration;
     }
 }

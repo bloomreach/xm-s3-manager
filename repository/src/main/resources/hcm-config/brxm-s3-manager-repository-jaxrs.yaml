@@ -1,0 +1,14 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/s3manager:
+      jcr:primaryType: hipposys:module
+      hipposys:className: com.bloomreach.xm.manager.s3.module.S3ManagerDaemonModule
+      /hippo:moduleconfig:
+        jcr:primaryType: nt:unstructured
+        accessKey: your-access-key
+        secretKey: your-secret-key
+        bucket: your-backet-name
+        presigned: false
+        maxFileSize: 160000
+        chunkSize: 5
+        timeout: 0

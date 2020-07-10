@@ -8,10 +8,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import './S3UploadDialog.css';
 import DropzoneComponent from "./react-dropzone";
+import DZConfContext from "./DZConfContext";
 
 const axios = require('axios').default;
 
 class S3UploadDialog extends React.Component {
+  static contextType = DZConfContext;
 
   constructor (props) {
     super(props);
@@ -22,15 +24,6 @@ class S3UploadDialog extends React.Component {
       open: false,
       folder: props.folder,
     }
-
-    // For a full list of possible configurations,
-    // please consult http://www.dropzonejs.com/#configuration
-    this.djsConfig = {
-      paramName: "file", // The name that will be used to transfer the file
-      maxFilesize: 160000, // MB
-      chunking: true,
-      chunkSize: (5 * 1024 * 1024),
-    };
 
     this.componentConfig = {
       postUrl: props.baseURL + '/uploadFiles?path=' + props.folder,
@@ -54,6 +47,18 @@ class S3UploadDialog extends React.Component {
   }
 
   componentDidMount () {
+    const dzConf = this.context;
+
+    // For a full list of possible configurations,
+    // please consult http://www.dropzonejs.com/#configuration
+    this.djsConfig = {
+      paramName: "file", // The name that will be used to transfer the file
+      maxFilesize: dzConf.maxFileSize ?? 160000, // MB
+      chunking: true,
+      chunkSize: (dzConf.chunkSize ?? 5) * (1024 * 1024),
+      acceptedFiles: dzConf.allowedExtensions ?? null,
+      timeout: dzConf.timeout ?? 0
+    };
   }
 
   handleClose () {

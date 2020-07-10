@@ -17,6 +17,7 @@ package com.bloomreach.xm.manager.s3.module;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -43,6 +44,7 @@ import com.amazonaws.services.s3.model.MultipartUploadListing;
 import com.bloomreach.xm.manager.api.PostUploadOperation;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
+import com.bloomreach.xm.manager.s3.model.DZConfiguration;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.service.AwsService;
@@ -53,6 +55,8 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     private static final Logger logger = LoggerFactory.getLogger(S3ManagerDaemonModule.class);
     private static final String END_POINT = "/s3manager";
+    private static final String XM_S3_ACCESS_KEY = "XM_S3_ACCESS_KEY";
+    private static final String XM_S3_SECRET_KEY = "XM_S3_SECRET_KEY";
     private AwsService awsService;
     private AwsS3Service awsS3Service;
     Value[] multiPostOperations;
@@ -62,16 +66,33 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private String bucket;
     private boolean presigned;
     private long expTime;
+    private DZConfiguration dzConfiguration;
 
     @Override
     protected void doConfigure(final Node moduleConfig) throws RepositoryException {
-        accessKey = moduleConfig.getProperty("accessKey").getString();
-        secretKey = moduleConfig.getProperty("secretKey").getString();
+        if(StringUtils.isNotEmpty(System.getenv(XM_S3_ACCESS_KEY))){
+            accessKey = System.getenv(XM_S3_ACCESS_KEY);
+        } else if (StringUtils.isNotEmpty(System.getProperty(XM_S3_ACCESS_KEY))){
+            accessKey = System.getProperty(XM_S3_ACCESS_KEY);
+        } else if (moduleConfig.hasProperty("accessKey")) {
+            accessKey = moduleConfig.getProperty("accessKey").getString();
+        }
+
+        if(StringUtils.isNotEmpty(System.getenv(XM_S3_SECRET_KEY))){
+            secretKey = System.getenv(XM_S3_SECRET_KEY);
+        } else if (StringUtils.isNotEmpty(System.getProperty(XM_S3_SECRET_KEY))){
+            secretKey = System.getProperty(XM_S3_SECRET_KEY);
+        } else if (moduleConfig.hasProperty("secretKey")) {
+            secretKey = moduleConfig.getProperty("secretKey").getString();
+        }
+
         bucket = moduleConfig.getProperty("bucket").getString();
         presigned = moduleConfig.getProperty("presigned").getBoolean();
         if(moduleConfig.hasProperty("expirationTime")) {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
+
+        extractDZConfiguration(moduleConfig);
 
         if(moduleConfig.hasProperty("multiPostUploadOperations")) {
             multiPostOperations = moduleConfig.getProperty("multiPostUploadOperations").getValues();
@@ -79,6 +100,29 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         if(moduleConfig.hasProperty("singlePostUploadOperations")) {
             singlePostOperations = moduleConfig.getProperty("singlePostUploadOperations").getValues();
         }
+    }
+
+    private void extractDZConfiguration(final Node moduleConfig) throws RepositoryException {
+        String[] allowedExtensions = moduleConfig.hasProperty("allowedExtensions") ?
+                Arrays.stream(moduleConfig.getProperty("allowedExtensions").getValues()).map(value -> {
+                    try {
+                        return value.getString();
+                    } catch (RepositoryException e) {
+                        logger.error("An exception occurred while reading dz configuration for allowed extensions.", e);
+                    }
+                    return null;
+                }).toArray(String[]::new) : null;
+
+        long maxFileSize = moduleConfig.hasProperty("maxFileSize") ?
+                moduleConfig.getProperty("maxFileSize").getValue().getLong() : 160000;
+
+        long chunkSize = moduleConfig.hasProperty("chunkSize") ?
+                moduleConfig.getProperty("chunkSize").getValue().getLong() : 5;
+
+        long timeout = moduleConfig.hasProperty("timeout") ?
+                moduleConfig.getProperty("timeout").getValue().getLong() : 0;
+
+        dzConfiguration = new DZConfiguration(allowedExtensions, maxFileSize, chunkSize, timeout);
     }
 
     private void initPostProcessors(final Value[] postProcesses, final List<PostUploadOperation> processList, final AmazonS3 client) throws RepositoryException{
@@ -108,7 +152,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
             initPostProcessors(singlePostOperations, singlePostUploadOperations, awsService.getS3client());
         }
         awsS3Service = new AwsS3ServiceImpl(awsService, multiPostUploadOperations, singlePostUploadOperations, bucket, presigned, expTime);
-        AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session);
+        AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session, dzConfiguration);
 
         HippoServiceRegistry.register(awsS3Service, AwsS3Service.class);
         ManagedUserSessionInvoker managedUserSessionInvoker = new ManagedUserSessionInvoker(session);

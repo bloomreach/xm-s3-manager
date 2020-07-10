@@ -9,6 +9,7 @@ import BrXMExplorerDialogWrapper from "./BrXMExplorerDialogWrapper";
 import BrXMAppWrapper from "./BrXMAppWrapper";
 import {ACLProvider} from "./ACLContext";
 import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles";
+import {DZConfProvider} from "./DZConfContext";
 
 const axios = require('axios').default;
 
@@ -38,12 +39,23 @@ function getACL(baseUrl) {
   });
 }
 
+function getDZConf(baseUrl) {
+  return axios.get('/dzconf', {
+    baseURL: baseUrl,
+  }).then(response => {
+    return response.data
+  }).catch(exception => {
+    console.error(exception);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   try {
 
     let ui;
     let extensionConfig;
     let acl;
+    let dzConf;
     let baseUrl;
     if(!window.location.href.includes('ckeditor')) {
       ui = await UiExtension.register();
@@ -54,17 +66,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       baseUrl = window.location.href.replace('angular/s3manager/index.html#/ckeditor', 'ws/s3manager/awsS3');
     }
     acl = await getACL(baseUrl);
+    dzConf = await getDZConf(baseUrl);
 
     const routing = (
       <MuiThemeProvider theme={theme}>
       <ACLProvider value={acl}>
-        <HashRouter>
-          <Switch>
-            <Route path="/ckeditor" render={props => <S3Explorer baseURL={baseUrl} context='ckeditor'/>}/>
-            <Route path="/dialog" render={props => <BrXMExplorerDialogWrapper ui={ui}/>}/>
-            <Route exact path="/" render={props => <BrXMAppWrapper ui={ui}/>}/>
-          </Switch>
-        </HashRouter>
+        <DZConfProvider value={dzConf}>
+          <HashRouter>
+            <Switch>
+              <Route path="/ckeditor" render={props => <S3Explorer baseURL={baseUrl} context='ckeditor'/>}/>
+              <Route path="/dialog" render={props => <BrXMExplorerDialogWrapper ui={ui}/>}/>
+              <Route exact path="/" render={props => <BrXMAppWrapper ui={ui}/>}/>
+            </Switch>
+          </HashRouter>
+        </DZConfProvider>
       </ACLProvider>
       </MuiThemeProvider>
     );
