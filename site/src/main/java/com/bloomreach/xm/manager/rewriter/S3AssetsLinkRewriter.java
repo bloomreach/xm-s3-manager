@@ -31,7 +31,7 @@ import com.bloomreach.xm.manager.common.api.AwsS3Service;
 
 public class S3AssetsLinkRewriter extends SimpleContentRewriter {
 
-    private final static Logger log = LoggerFactory.getLogger(S3AssetsLinkRewriter.class);
+    private static final Logger log = LoggerFactory.getLogger(S3AssetsLinkRewriter.class);
 
     @Override
     public String rewrite(final String html, final Node hippoHtmlNode, final HstRequestContext requestContext, final Mount targetMount) {

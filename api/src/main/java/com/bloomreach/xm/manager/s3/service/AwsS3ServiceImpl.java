@@ -118,7 +118,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("binary/octet-stream");
         PutObjectRequest putRequest = new PutObjectRequest(bucket, key + "/", new ByteArrayInputStream(new byte[0]), metadata);
-        PutObjectResult putObjectResult = amazonS3.putObject(putRequest);
+        amazonS3.putObject(putRequest);
     }
 
     public void deleteFiles(List<S3ListItem> items) {
@@ -126,7 +126,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         String[] filesKeys = items.stream().filter(s3ListItem -> s3ListItem.getType().equals(Type.FILE) || s3ListItem.getType().equals(Type.IMAGE)).map(ListItem::getId).toArray(String[]::new);
         if (filesKeys.length > 0) {
             deleteObjectsRequestFiles.withKeys(filesKeys);
-            DeleteObjectsResult deleteObjectsResultFiles = amazonS3.deleteObjects(deleteObjectsRequestFiles);
+            amazonS3.deleteObjects(deleteObjectsRequestFiles);
         }
         items.stream().filter(s3ListItem -> s3ListItem.getType().equals(Type.FOLDER)).map(S3ListItem::getId).forEach(this::deleteDirectory);
     }
@@ -219,9 +219,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     private Map<String, String> getUserMetadata(SessionUser user){
-        Map<String, String> userMeta = new HashMap<String, String>() {{
-            put("source", "brXM");
-        }};
+        Map<String, String> userMeta = new HashMap<>();
+        userMeta.put("source", "brXM");
         if(StringUtils.isNotEmpty(user.getFirstName()) && StringUtils.isNotEmpty(user.getLastName())){
             userMeta.put("uploader", user.getFirstName()+" "+user.getLastName());
         } else {

@@ -35,6 +35,8 @@ public class S3DataFunction extends DerivedDataFunction {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(S3DataFunction.class);
+    private static final String ASSETS = "assets";
+    private static final String ASSET_IDS = "assetids";
 
     static {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -43,16 +45,16 @@ public class S3DataFunction extends DerivedDataFunction {
     @Override
     public Map<String, Value[]> compute(final Map<String, Value[]> map) {
         try {
-            if (map.containsKey("assets") && map.get("assets") != null) {
-                String openuidString = map.get("assets")[0].getString();
+            if (map.containsKey(ASSETS) && map.get(ASSETS) != null) {
+                String openuidString = map.get(ASSETS)[0].getString();
                 if (StringUtils.isNotEmpty(openuidString)) {
                     List<S3ListItem> items = MAPPER.readValue(openuidString, MAPPER.getTypeFactory().constructCollectionType(List.class, S3ListItem.class));
                     Value[] values = items.stream()
                             .map(s3ListItem -> getValueFactory().createValue(s3ListItem.getId()))
                             .toArray(Value[]::new);
-                    map.put("assetids", values);
+                    map.put(ASSET_IDS, values);
                 } else {
-                    map.put("assetids", new Value[]{});
+                    map.put(ASSET_IDS, new Value[]{});
                 }
             }
         } catch (RepositoryException | IOException e) {
