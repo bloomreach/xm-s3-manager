@@ -52,7 +52,6 @@ public class S3ListItem implements ListItem {
         this.link = link;
         this.path = object.getKey();
         String detect = TIKA.detect(object.getKey());
-        //todo hacky...
         if (detect.startsWith("image")) {
             this.type = Type.IMAGE;
         }
