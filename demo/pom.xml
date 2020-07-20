@@ -62,7 +62,7 @@
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
-    <brxm.s3.manager.version>0.1.0-SNAPSHOT</brxm.s3.manager.version>
+    <brxm.s3.manager.version>0.2.0-SNAPSHOT</brxm.s3.manager.version>
 
     <essentials.version>14.1.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
@@ -79,6 +79,11 @@
       <id>hippo</id>
       <name>Hippo maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2/</url>
+    </repository>
+    <repository>
+      <id>hippo-maven2-forge</id>
+      <name>Hippo Maven 2 Repository</name>
+      <url>https://maven.onehippo.com/maven2-forge/</url>
     </repository>
   </repositories>
 
