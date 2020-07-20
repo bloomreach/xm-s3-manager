@@ -215,3 +215,9 @@ Anchor generation
 Image generation
 1. Without selecting any text click on the S3 icon.
 1. Select an image asset, add it to the collection and click OK.
+
+## Release Notes
+
+| CMS Version| XM S3 Manager Version| Release Notes
+|--|--|--|
+| 14.x.x | 0.1.0 | Initial release |
