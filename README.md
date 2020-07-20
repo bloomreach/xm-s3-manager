@@ -1,10 +1,20 @@
 ## Installation
 
-- In the root pom.xml configure in the properties a version for the plugin and add the bellow dependency both in the dependencyManagement and dependencies section
+- In the root pom.xml configure in the properties a version for the plugin, make sure to include the required repository in the repositories section and add the bellow dependency both in the dependencyManagement and dependencies section
 ```xml
     <properties>
         <brxm.s3.manager.version>x.y.z</brxm.s3.manager.version>
     </properties>
+
+    <repositories>
+      <!-- SNIP -->
+      <repository>
+        <id>hippo-maven2-forge</id>
+        <name>Hippo Maven 2 Repository</name>
+        <url>https://maven.onehippo.com/maven2-forge/</url>
+      </repository>
+      <!-- SNIP -->
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
