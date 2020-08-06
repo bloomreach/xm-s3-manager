@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
@@ -61,7 +62,6 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     public static final String S3_CREATE_PERMISSION = "xm.s3manager-create.user";
     private final AwsS3ServiceImpl awsS3Service;
     private final Session systemSession;
-    private SessionUser user;
     private static DZConfiguration dzConfiguration;
 
     public AwsS3ProxyController(final AwsS3ServiceImpl awsS3Service, final Session systemSession, final DZConfiguration dzConfiguration) {
@@ -111,6 +111,7 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
                            @QueryParam(value = "path") String path) throws IOException {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
+            SessionUser user = getUserFromSession(httpServletRequest);
             if (total != null) {
                 awsS3Service.uploadMultipart(user, file, path, index, total);
             } else {
@@ -136,24 +137,36 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     }
 
     private S3Permissions getUserPermissions(final HttpServletRequest httpServletRequest){
+        final Session userSession = getUserSession(httpServletRequest);
+        return userSession!=null ? new S3Permissions(
+                ((HippoSession)userSession).isUserInRole(S3_USER_PERMISSION),
+                ((HippoSession)userSession).isUserInRole(S3_UPLOAD_PERMISSION),
+                ((HippoSession)userSession).isUserInRole(S3_DELETE_PERMISSION),
+                ((HippoSession)userSession).isUserInRole(S3_CREATE_PERMISSION)
+        ) : new S3Permissions(false, false, false, false);
+    }
+
+    private SessionUser getUserFromSession(final HttpServletRequest httpServletRequest){
+        try {
+            HippoSession hippoSession = (HippoSession) getUserSession(httpServletRequest);
+            return hippoSession!=null ? hippoSession.getUser() : null;
+        } catch (ItemNotFoundException e) {
+            log.error("An exception occurred while trying to retrieve user from session.", e);
+        }
+        return null;
+    }
+
+    private Session getUserSession(final HttpServletRequest httpServletRequest) {
         final HttpSession httpSession = httpServletRequest.getSession(false);
         final CmsSessionContext cmsSessionContext = CmsSessionContext.getContext(httpSession);
         final SimpleCredentials credentials = cmsSessionContext.getRepositoryCredentials();
         try {
-            final Session userSession = HttpSessionBoundJcrSessionHolder.getOrCreateJcrSession(AwsS3ProxyController.class.getName()+ ".session",
+            return HttpSessionBoundJcrSessionHolder.getOrCreateJcrSession(AwsS3ProxyController.class.getName() + ".session",
                     httpSession, credentials, systemSession.getRepository()::login);
-            user = ((HippoSession) userSession).getUser();
-            return new S3Permissions(
-                    ((HippoSession)userSession).isUserInRole(S3_USER_PERMISSION),
-                    ((HippoSession)userSession).isUserInRole(S3_UPLOAD_PERMISSION),
-                    ((HippoSession)userSession).isUserInRole(S3_DELETE_PERMISSION),
-                    ((HippoSession)userSession).isUserInRole(S3_CREATE_PERMISSION)
-            );
-        } catch (RepositoryException e) {
-            log.error("Error while trying to construct user roles for S3 plugin.", e);
-
+        } catch (RepositoryException e){
+            log.error("Error while trying to retrieve user session.", e);
         }
-        return new S3Permissions(false, false, false, false);
+        return null;
     }
 
     @Path("/dzconf")
