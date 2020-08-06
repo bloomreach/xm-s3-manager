@@ -220,4 +220,4 @@ Image generation
 
 | CMS Version| XM S3 Manager Version| Release Notes
 |--|--|--|
-| 14.x.x | 0.1.0 | Initial release |
+| 14.x.x | 0.2.0 | Refactored initial release |
