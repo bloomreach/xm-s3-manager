@@ -7,6 +7,7 @@ definitions:
         jcr:primaryType: nt:unstructured
         accessKey: your-access-key
         secretKey: your-secret-key
+        region: your-region
         bucket: your-backet-name
         presigned: false
         maxFileSize: 160000

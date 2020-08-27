@@ -140,6 +140,7 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |--|--|--|--|--|--|
 |accessKey | string | none | yes | your S3 access key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_ACCESS_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
 |secretKey | string | none | yes | your S3 secret key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_SECRET_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
+|region | string | none | yes | the appropriate AWS region for your account. For a full list of the available regions please visit this [page](https://docs.aws.amazon.com/general/latest/gr/s3.html) | |
 |bucket | string | none | yes | your S3 bucket name | |
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering | |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes | |

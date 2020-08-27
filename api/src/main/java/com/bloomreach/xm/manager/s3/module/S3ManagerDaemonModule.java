@@ -56,6 +56,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private AwsS3Service awsS3Service;
     private String accessKey;
     private String secretKey;
+    private String region;
     private String bucket;
     private boolean presigned;
     private long expTime;
@@ -80,6 +81,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         }
 
         bucket = moduleConfig.getProperty("bucket").getString();
+        region = moduleConfig.getProperty("region").getString();
         presigned = moduleConfig.getProperty("presigned").getBoolean();
         if(moduleConfig.hasProperty("expirationTime")) {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
@@ -114,7 +116,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     @Override
     public void doInitialize(final Session session) throws RepositoryException {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
-        awsService = new AwsService(awsCredentials);
+        awsService = new AwsService(awsCredentials, region);
         awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session, dzConfiguration);
 

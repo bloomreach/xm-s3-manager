@@ -24,11 +24,11 @@ public class AwsService {
 
     private final AmazonS3 s3client;
 
-    public AwsService(final AwsCredentials credentials) {
+    public AwsService(final AwsCredentials credentials, final String region) {
         s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials.getCredentials()))
-                .withRegion(Regions.EU_WEST_1)
+                .withRegion(region)
                 .build();
     }
 
