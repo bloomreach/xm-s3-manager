@@ -283,7 +283,7 @@ class S3Explorer extends React.Component {
                     disabled: this.determineDisabled(rowData, selected),
                   }
                 },
-                sorting: true,
+                sorting: false,
               }}
               onSelectionChange={(data) => this.setState({currentSelection:data})}
               components={{
