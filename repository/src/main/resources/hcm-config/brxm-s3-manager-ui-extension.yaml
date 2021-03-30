@@ -2,9 +2,8 @@ definitions:
   config:
     /hippo:configuration/hippo:frontend/cms/ui-extensions/s3manager:
       jcr:primaryType: frontend:uiExtension
-      frontend:config: '{"title":"S3 Explorer","size":"large","clientId":"qwerty123",
-            "baseURL": "ws/s3manager/awsS3", "authenticationHeader":
-            "YWRtaW46YWRtaW4="}'
+      frontend:config: '{"title":"S3 Explorer","size":"large",
+            "baseURL": "ws/s3manager/awsS3"}'
       frontend:displayName: S3 Asset
       frontend:extensionPoint: document.field
       frontend:initialHeightInPixels: 400
