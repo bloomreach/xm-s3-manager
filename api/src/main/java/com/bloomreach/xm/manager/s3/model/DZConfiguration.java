@@ -2,23 +2,23 @@ package com.bloomreach.xm.manager.s3.model;
 
 public class DZConfiguration {
 
-    private String[] allowedExtensions;
+    private String allowedExtensions;
     private long maxFileSize;
     private long chunkSize;
     private long timeout;
 
-    public DZConfiguration(final String[] allowedExtensions, final long maxFileSize, final long chunkSize, final long timeout) {
+    public DZConfiguration(final String allowedExtensions, final long maxFileSize, final long chunkSize, final long timeout) {
         this.allowedExtensions = allowedExtensions;
         this.maxFileSize = maxFileSize;
         this.chunkSize = chunkSize;
         this.timeout = timeout;
     }
 
-    public String[] getAllowedExtensions() {
+    public String getAllowedExtensions() {
         return allowedExtensions;
     }
 
-    public void setAllowedExtensions(final String[] allowedExtensions) {
+    public void setAllowedExtensions(final String allowedExtensions) {
         this.allowedExtensions = allowedExtensions;
     }
 

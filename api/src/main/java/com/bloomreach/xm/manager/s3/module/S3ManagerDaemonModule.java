@@ -17,6 +17,7 @@ package com.bloomreach.xm.manager.s3.module;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -91,7 +92,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     }
 
     private void extractDZConfiguration(final Node moduleConfig) throws RepositoryException {
-        String[] allowedExtensions = moduleConfig.hasProperty("allowedExtensions") ?
+        String allowedExtensions = moduleConfig.hasProperty("allowedExtensions") ?
                 Arrays.stream(moduleConfig.getProperty("allowedExtensions").getValues()).map(value -> {
                     try {
                         return value.getString();
@@ -99,7 +100,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
                         logger.error("An exception occurred while reading dz configuration for allowed extensions.", e);
                     }
                     return null;
-                }).toArray(String[]::new) : null;
+                }).collect(Collectors.joining(",")) : null;
 
         long maxFileSize = moduleConfig.hasProperty("maxFileSize") ?
                 moduleConfig.getProperty("maxFileSize").getValue().getLong() : 160000;
