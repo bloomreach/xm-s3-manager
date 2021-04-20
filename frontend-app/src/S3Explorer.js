@@ -25,8 +25,11 @@ import {ACLConsumer} from "./ACLContext";
 const axios = require('axios').default;
 
 function openInNewTab (url) {
-  var win = window.open(url, '_blank');
-  win.focus();
+  var win = window.open(url, '_blank', 'noopener,noreferrer');
+  if (win){
+    win.opener = null;
+    win.focus();
+  }
 }
 
 function isEmpty (val) {
