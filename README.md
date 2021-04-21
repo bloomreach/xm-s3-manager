@@ -221,4 +221,4 @@ Image generation
 
 | CMS Version| XM S3 Manager Version| Release Notes
 |--|--|--|
-| 14.x.x | 0.4.0 | Minor bug fixes |
+| 14.x.x | 0.5.0 | Minor bug fixes |
