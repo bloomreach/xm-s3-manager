@@ -221,4 +221,4 @@ Image generation
 
 | CMS Version| XM S3 Manager Version| Release Notes
 |--|--|--|
-| 14.x.x | 0.5.0 | Minor bug fixes |
+| 15.x.x | 1.0.0 | Upgrade to BrXM version 15.x |

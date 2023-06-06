@@ -62,7 +62,7 @@
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
-    <brxm.s3.manager.version>0.6.0-SNAPSHOT</brxm.s3.manager.version>
+    <brxm.s3.manager.version>1.0.1-SNAPSHOT</brxm.s3.manager.version>
 
     <essentials.version>15.2.3</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
