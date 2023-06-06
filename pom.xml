@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>31.1.0</version>
+    <version>15.2.3</version>
   </parent>
 
   <groupId>com.bloomreach.xm.manager</groupId>
@@ -31,15 +31,15 @@
   <packaging>pom</packaging>
 
   <properties>
-    <hippo.hst.version>14.1.0</hippo.hst.version>
-    <hippo.repository.version>14.1.0</hippo.repository.version>
-    <hippo.services.version>14.1.0</hippo.services.version>
-    <cxf.version>3.3.5</cxf.version>
-    <aws.s3.sdk.version>1.11.762</aws.s3.sdk.version>
-    <commons.io.version>2.6</commons.io.version>
-    <commons.lang.version>2.6</commons.lang.version>
-    <tika.core.version>1.24.1</tika.core.version>
-    <jsoup.version>1.13.1</jsoup.version>
+    <hippo.hst.version>15.2.3</hippo.hst.version>
+    <hippo.repository.version>15.2.3</hippo.repository.version>
+    <hippo.services.version>15.2.3</hippo.services.version>
+    <cxf.version>3.5.5</cxf.version>
+    <aws.s3.sdk.version>1.12.472</aws.s3.sdk.version>
+    <commons.io.version>2.12.0</commons.io.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <tika.core.version>2.8.0</tika.core.version>
+    <jsoup.version>1.16.1</jsoup.version>
   </properties>
 
   <developers>

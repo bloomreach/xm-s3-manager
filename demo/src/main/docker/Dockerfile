@@ -40,6 +40,7 @@ ENV POSTGRES_DB_DRIVER org.postgresql.Driver
 # Delete default & unused war files
 # Define a non-root user with limited permissions
 # Non-root user should own tomcat & /brxm dirs
+# Install unzip for the lucene index export
 RUN mkdir -p \
         /brxm/bin \
         /usr/local/tomcat/common/classes \
@@ -52,7 +53,8 @@ RUN mkdir -p \
         /usr/local/tomcat/webapps/ROOT \
     && addgroup --gid ${docker.brxm.container.gid} ${docker.brxm.container.username} \
     && adduser --gid ${docker.brxm.container.gid} --uid ${docker.brxm.container.uid} ${docker.brxm.container.username} \
-    && chown -R ${docker.brxm.container.username} /usr/local/tomcat /brxm
+    && chown -R ${docker.brxm.container.username} /usr/local/tomcat /brxm \
+    && apt-get update && apt-get install -y unzip
 
 USER ${docker.brxm.container.username}
 
