@@ -60,6 +60,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     private String region;
     private String bucket;
     private boolean presigned;
+    private boolean aclEnabled;
     private long expTime;
     private DZConfiguration dzConfiguration;
 
@@ -84,6 +85,8 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
         bucket = moduleConfig.getProperty("bucket").getString();
         region = moduleConfig.getProperty("region").getString();
         presigned = moduleConfig.getProperty("presigned").getBoolean();
+        aclEnabled = !moduleConfig.hasProperty("aclEnabled") || moduleConfig.getProperty("aclEnabled").getBoolean();
+
         if(moduleConfig.hasProperty("expirationTime")) {
             expTime = moduleConfig.getProperty("expirationTime").getLong();
         }
@@ -118,7 +121,7 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     public void doInitialize(final Session session) throws RepositoryException {
         AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
         awsService = new AwsService(awsCredentials, region);
-        awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, expTime);
+        awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, aclEnabled, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session, dzConfiguration);
 
         HippoServiceRegistry.register(awsS3Service, AwsS3Service.class);

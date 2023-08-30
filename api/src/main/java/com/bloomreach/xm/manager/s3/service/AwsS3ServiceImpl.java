@@ -65,14 +65,16 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private final String bucket;
     private final AmazonS3 amazonS3;
     private final boolean presigned;
+    private final boolean aclEnabled;
     private final long expTime;
     private final Map<String, InitiateMultipartUploadResult> multipartUploadResultMap = new HashMap<>();
     private final MultiValueMap<String, PartETag> eParts = new LinkedMultiValueMap<>();
 
-    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final long expTime) {
+    public AwsS3ServiceImpl(final AwsService awsService, final String bucket, final boolean presigned, final boolean aclEnabled, final long expTime) {
         this.bucket = bucket;
         amazonS3 = awsService.getS3client();
         this.presigned = presigned;
+        this.aclEnabled = aclEnabled;
         this.expTime = expTime;
     }
 
@@ -148,7 +150,10 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             objectMetadata.setUserMetadata(getUserMetadata(user));
             objectMetadata.setContentLength(bytes.length);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-            por = new PutObjectRequest(bucket, uniqueFileName, byteArrayInputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead);
+            por = new PutObjectRequest(bucket, uniqueFileName, byteArrayInputStream, objectMetadata);
+            if(aclEnabled){
+                por.withCannedAcl(CannedAccessControlList.PublicRead);
+            }
         } catch (IOException e) {
             logger.error("An exception occurred during a single part upload to S3.", e);
         }
@@ -168,7 +173,10 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(contentType);
             objectMetadata.setUserMetadata(getUserMetadata(user));
-            InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, uniqueFileName, objectMetadata).withCannedACL(CannedAccessControlList.PublicRead);
+            InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, uniqueFileName, objectMetadata);
+            if(aclEnabled){
+                initRequest.withCannedACL(CannedAccessControlList.PublicRead);
+            }
             InitiateMultipartUploadResult initResponse = amazonS3.initiateMultipartUpload(initRequest);
             multipartUploadResultMap.put(uniqueFileName, initResponse);
         }
