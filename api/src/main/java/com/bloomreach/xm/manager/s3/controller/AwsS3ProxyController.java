@@ -106,14 +106,14 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
     public void uploadFile(@Context HttpServletRequest httpServletRequest,
                            @Context HttpServletResponse httpServletResponse,
                            @Multipart(value = "file", required = false) Attachment file,
-                           @Multipart(value = "dzchunkindex", required = false) Integer index,
-                           @Multipart(value = "dztotalchunkcount", required = false) Integer total,
+                           @Multipart(value = "dzchunkindex", required = false) String index,
+                           @Multipart(value = "dztotalchunkcount", required = false) String total,
                            @QueryParam(value = "path") String path) throws IOException {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isUploadAllowed()) {
             SessionUser user = getUserFromSession(httpServletRequest);
             if (total != null) {
-                awsS3Service.uploadMultipart(user, file, path, index, total);
+                awsS3Service.uploadMultipart(user, file, path, Integer.parseInt(index), Integer.parseInt(total));
             } else {
                 awsS3Service.uploadSinglepart(user, file, path);
             }
