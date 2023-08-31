@@ -143,6 +143,7 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 |region | string | none | yes | the appropriate AWS region for your account. For a full list of the available regions please visit this [page](https://docs.aws.amazon.com/general/latest/gr/s3.html) | |
 |bucket | string | none | yes | your S3 bucket name | |
 |presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering | |
+|aclEnabled| boolean | true | no |flag for ACL enabled buckets | |
 |expirationTime | long | none | no | used with presigned true and value is expiration in minutes | |
 |allowedExtensions | multi string | null | no | optionally define the list of allowed mime types or extensions for the upload operation `Eg.: image/*, application/pdf, .psd` | |
 |maxFileSize | long | 160000 | no | the maximum allowed file size in MB. | |
@@ -219,6 +220,7 @@ Image generation
 
 ## Release Notes
 
-| CMS Version| XM S3 Manager Version| Release Notes
-|--|--|--|
-| 15.x.x | 1.0.0 | Upgrade to BrXM version 15.x |
+| CMS Version | XM S3 Manager Version | Release Notes                                                                                                                                                                                                                      
+|-------------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 15.x.x      | 2.0.0                 | 2.0.0 - Fix multipart upload,<br/>Add backwards compatible support for ACL enabled backets,<br/>Added basic operations audit logging<br/>1.0.0 - Upgrade to BrXM version 15.x |
+| 14.x.x      | 0.5.0                 | Minor bug fixes                                                                                                                                                                                                                    |
