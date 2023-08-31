@@ -76,6 +76,10 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isDeleteAllowed()) {
             awsS3Service.deleteFiles(items);
+            log.info("User: {} deleted the files: {}",
+                    getUserFromSession(httpServletRequest).getId(),
+                    items.stream().map(S3ListItem::getPath).toArray(String[]::new)
+            );
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
@@ -88,6 +92,10 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
         S3Permissions s3Permissions = getUserPermissions(httpServletRequest);
         if(s3Permissions.isCreateAllowed()) {
             awsS3Service.createFolder(variables.get("path"));
+            log.info("User: {} created a directory with path: {}",
+                    getUserFromSession(httpServletRequest).getId(),
+                    variables.get("path")
+            );
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
@@ -114,8 +122,22 @@ public class AwsS3ProxyController implements ProxyController<S3ListItem> {
             SessionUser user = getUserFromSession(httpServletRequest);
             if (total != null) {
                 awsS3Service.uploadMultipart(user, file, path, Integer.parseInt(index), Integer.parseInt(total));
+                log.info("User: {} uploaded multipart file: {} to path: {}",
+                        getUserFromSession(httpServletRequest).getId(),
+                        file.getHeader("Content-Disposition")
+                                .substring(file.getHeader("Content-Disposition")
+                                        .lastIndexOf("=")+1).replace("\"",""),
+                        path.isEmpty()? "/" : path
+                );
             } else {
                 awsS3Service.uploadSinglepart(user, file, path);
+                log.info("User: {} uploaded file: {} to path: {}",
+                        getUserFromSession(httpServletRequest).getId(),
+                        file.getHeader("Content-Disposition")
+                                .substring(file.getHeader("Content-Disposition")
+                                        .lastIndexOf("=")+1).replace("\"",""),
+                        path.isEmpty()? "/" : path
+                );
             }
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
