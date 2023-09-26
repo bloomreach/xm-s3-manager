@@ -113,8 +113,7 @@
             toolbar: 'links,10',
             icon: 'plugins/s3manager/icons/s3manager.png',
             allowedContent: 'img[!data-s3id,!src,alt]; a[!data-s3id,!href]',
-      requiredContent: 'img[!data-s3id,!src]; a[!data-s3id,!href]'
-
+            requiredContent: 'img[!data-s3id,!src]; a[!data-s3id,!href]'
         });
 
         editor.addCommand('pickS3Asset', {
