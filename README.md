@@ -51,7 +51,7 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
+                <artifactId>cargo-maven3-plugin</artifactId>
                 <!--SNIP-->
                 <configuration>
                     <container>
