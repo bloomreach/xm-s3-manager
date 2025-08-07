@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.example</groupId>
     <artifactId>demo-site</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>demo-components</artifactId>
   <packaging>jar</packaging>
@@ -27,18 +27,19 @@
     <!--    brXM S3 Manager-->
 
     <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+    </dependency>
+
+    <!-- other predefined runtime scope versioned dependencies -->
+    <dependency>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-spec-jakarta</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-spec</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-impl</artifactId>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-impl-jakarta</artifactId>
     </dependency>
 
     <dependency>

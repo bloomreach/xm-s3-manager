@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.bloomreach.xm.manager</groupId>
     <artifactId>brxm-s3-manager</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>brxm-s3-manager-api</artifactId>
   <name>brXM S3 Manager API</name>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>${commons.io.version}</version>
+      <version>${commons-io.version}</version>
     </dependency>
 
     <dependency>

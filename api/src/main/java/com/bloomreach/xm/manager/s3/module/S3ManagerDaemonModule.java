@@ -23,7 +23,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.repository.jaxrs.CXFRepositoryJaxrsEndpoint;
 import org.onehippo.repository.jaxrs.RepositoryJaxrsService;
@@ -44,7 +44,7 @@ import com.bloomreach.xm.manager.s3.model.DZConfiguration;
 import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.service.AwsService;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 
 @ProvidesService(types = {AwsS3Service.class})
 public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
