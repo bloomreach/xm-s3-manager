@@ -16,6 +16,7 @@ target/
 /site/components/target/
 storage/
 overlays/
+essentials/overlays
 
 ## OSX
 .DS_Store
