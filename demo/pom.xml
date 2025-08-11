@@ -12,7 +12,7 @@
   <description>demo</description>
   <groupId>org.example</groupId>
   <artifactId>demo</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!--
@@ -62,7 +62,7 @@
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
-    <brxm.s3.manager.version>3.0.0-SNAPSHOT</brxm.s3.manager.version>
+    <brxm.s3.manager.version>3.1.0-SNAPSHOT</brxm.s3.manager.version>
 
     <essentials.version>16.4.1</essentials.version>
 
