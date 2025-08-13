@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach (http://www.bloomreach.com)
+ * Copyright 2020-2025 Bloomreach (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.bloomreach.xm.manager.s3.model.S3ListItem;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hippoecm.repository.ext.DerivedDataFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

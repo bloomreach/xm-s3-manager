@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2020 Bloomreach (http://www.bloomreach.com)
+  Copyright 2020-2025 Bloomreach (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the  "License");
   you may not use this file except in compliance with the License.
@@ -20,26 +20,23 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>15.2.3</version>
+    <version>16.4.1</version>
   </parent>
 
   <groupId>com.bloomreach.xm.manager</groupId>
   <artifactId>brxm-s3-manager</artifactId>
   <name>brXM S3 Manager</name>
   <description>brXM S3 Manager</description>
-  <version>2.0.2-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <hippo.hst.version>15.2.3</hippo.hst.version>
-    <hippo.repository.version>15.2.3</hippo.repository.version>
-    <hippo.services.version>15.2.3</hippo.services.version>
-    <cxf.version>3.5.5</cxf.version>
-    <aws.s3.sdk.version>1.12.472</aws.s3.sdk.version>
-    <commons.io.version>2.12.0</commons.io.version>
-    <commons-lang3.version>3.12.0</commons-lang3.version>
-    <tika.core.version>2.8.0</tika.core.version>
-    <jsoup.version>1.16.1</jsoup.version>
+    <hippo.hst.version>16.4.1</hippo.hst.version>
+    <hippo.repository.version>16.4.1</hippo.repository.version>
+    <hippo.services.version>16.4.1</hippo.services.version>
+    <aws.s3.sdk.version>1.12.788</aws.s3.sdk.version>
+    <tika.core.version>3.2.1</tika.core.version>
+    <jsoup.version>1.21.1</jsoup.version>
   </properties>
 
   <developers>
@@ -54,6 +51,12 @@
       <name>Lef Karamoulas</name>
       <organization>bloomreach</organization>
       <email>lef.karamoulas@bloomreach.com</email>
+    </developer>
+    <developer>
+      <id>davidbrrr</id>
+      <name>David Bailey</name>
+      <organization>bloomreach</organization>
+      <email>david.bailey@bloomreach.com</email>
     </developer>
   </developers>
 
@@ -74,9 +77,9 @@
 
   <distributionManagement>
     <repository>
-      <name>Hippo Maven 2 Forge Repository</name>
-      <id>hippo-maven2-forge</id>
-      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
+      <name>Bloomreach Maven 2 Forge Repository</name>
+      <id>bloomreach-maven2-forge</id>
+      <url>https://maven.bloomreach.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
     </repository>
   </distributionManagement>
@@ -92,9 +95,9 @@
 
   <repositories>
     <repository>
-      <id>hippo</id>
-      <name>Hippo Maven 2</name>
-      <url>https://maven.onehippo.com/maven2/</url>
+      <id>bloomreach-maven2</id>
+      <name>Bloomreach Maven 2 Repository</name>
+      <url>https://maven.bloomreach.com/repository/maven2/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>

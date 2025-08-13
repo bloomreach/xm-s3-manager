@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach (http://www.bloomreach.com)
+ * Copyright 2020-2025 Bloomreach (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.tika.Tika;
 import org.onehippo.repository.security.SessionUser;
