@@ -17,7 +17,7 @@
     </#if>
     <@hst.html hippohtml=document.content/>
     <#list document.assets.assetids as url>
-      <img src="${url}"/>
+        <p><a href="${url}" target="_blank">${url}</a></p>
     </#list>
   </article>
 <#-- @ftlvariable name="editMode" type="java.lang.Boolean"-->

@@ -15,24 +15,34 @@
  */
 package com.bloomreach.xm.manager.s3.service;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 public class AwsService {
 
-    private final AmazonS3 s3client;
+    private final S3Client s3client;
+    private final S3Presigner s3presigner;
 
     public AwsService(final AwsCredentials credentials, final String region) {
-        s3client = AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials.getCredentials()))
-                .withRegion(region)
-                .build();
+        s3client = S3Client.builder()
+            .region(Region.of(region))
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .build();
+
+        s3presigner = S3Presigner.builder()
+            .region(Region.of(region))
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .build();
     }
 
-    public AmazonS3 getS3client() {
+    public S3Client getS3client() {
         return s3client;
+    }
+
+    public S3Presigner getS3presigner() {
+        return s3presigner;
     }
 }

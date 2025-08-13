@@ -33,18 +33,19 @@ import org.onehippo.repository.modules.ProvidesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
-import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
-import com.amazonaws.services.s3.model.MultipartUpload;
-import com.amazonaws.services.s3.model.MultipartUploadListing;
 import com.bloomreach.xm.manager.common.api.AwsS3Service;
 import com.bloomreach.xm.manager.s3.controller.AwsS3ProxyController;
 import com.bloomreach.xm.manager.s3.model.DZConfiguration;
-import com.bloomreach.xm.manager.s3.service.AwsCredentials;
 import com.bloomreach.xm.manager.s3.service.AwsS3ServiceImpl;
 import com.bloomreach.xm.manager.s3.service.AwsService;
 import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.services.s3.model.AbortMultipartUploadRequest;
+import software.amazon.awssdk.services.s3.model.ListMultipartUploadsRequest;
+import software.amazon.awssdk.services.s3.model.ListMultipartUploadsResponse;
+import software.amazon.awssdk.services.s3.model.MultipartUpload;
 
 @ProvidesService(types = {AwsS3Service.class})
 public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
@@ -119,9 +120,9 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     public void doInitialize(final Session session) throws RepositoryException {
-        AwsCredentials awsCredentials = new AwsCredentials(accessKey, secretKey);
+        AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
         awsService = new AwsService(awsCredentials, region);
-        awsS3Service = new AwsS3ServiceImpl(awsService, bucket, presigned, aclEnabled, expTime);
+        awsS3Service = new AwsS3ServiceImpl(awsService, bucket, region, presigned, aclEnabled, expTime);
         AwsS3ProxyController awsS3ProxyController = new AwsS3ProxyController((AwsS3ServiceImpl) awsS3Service, session, dzConfiguration);
 
         HippoServiceRegistry.register(awsS3Service, AwsS3Service.class);
@@ -145,11 +146,16 @@ public class S3ManagerDaemonModule extends AbstractReconfigurableDaemonModule {
     @Override
     protected void onConfigurationChange(final Node moduleConfig) throws RepositoryException {
         try {
-            ListMultipartUploadsRequest allMultipartUploadsRequest = new ListMultipartUploadsRequest(bucket);
-            MultipartUploadListing multipartUploadListing = awsService.getS3client().listMultipartUploads(allMultipartUploadsRequest);
-            List<MultipartUpload> uploads = multipartUploadListing.getMultipartUploads();
+            ListMultipartUploadsRequest allMultipartUploadsRequest = ListMultipartUploadsRequest.builder().bucket(bucket).build();
+            ListMultipartUploadsResponse response = awsService.getS3client().listMultipartUploads(allMultipartUploadsRequest);
+            List<MultipartUpload> uploads = response.uploads();
             for (MultipartUpload u : uploads) {
-                awsService.getS3client().abortMultipartUpload(new AbortMultipartUploadRequest(bucket, u.getKey(), u.getUploadId()));
+                AbortMultipartUploadRequest abortRequest = AbortMultipartUploadRequest.builder()
+                    .bucket(bucket)
+                    .key(u.key())
+                    .uploadId(u.uploadId())
+                    .build();
+                awsService.getS3client().abortMultipartUpload(abortRequest);
             }
         } catch (SdkClientException e) {
             logger.error("An exception occurred while aborting in-progress multi part uploads before module reconfiguration.", e);
