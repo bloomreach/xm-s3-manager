@@ -220,7 +220,8 @@ Image generation
 
 ## Release Notes
 
-| CMS Version | XM S3 Manager Version | Release Notes                                                                                                                                                                                                       
-|-------------|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| CMS Version | XM S3 Manager Version | Release Notes                                                                                                                                                                                                                                                         
+|-------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 16.x.x      | 3.0.0                 | 3.0.0 - Upgrade to BrXM version 16.x                                                                                                                                                                                                                                  |
 | 15.x.x      | 2.0.1                 | 2.0.1 - Fix creation of S3 links in CK editor<br/>2.0.0 - Fix multipart upload,<br/>Add backwards compatible support for ACL enabled backets,<br/>Added basic operations audit logging (AwsS3ProxyController log level info)<br/>1.0.0 - Upgrade to BrXM version 15.x |
-| 14.x.x      | 0.5.0                 | Minor bug fixes                                                                                                                                                                                                     |
+| 14.x.x      | 0.5.0                 | Minor bug fixes                                                                                                                                                                                                                                                       |
