@@ -20,11 +20,11 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.bloomreach.xm.manager.api.ListItem;
 import com.bloomreach.xm.manager.api.Type;
 import com.bloomreach.xm.manager.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class S3ListItem implements ListItem {
@@ -42,16 +42,16 @@ public class S3ListItem implements ListItem {
     public S3ListItem() {
     }
 
-    public S3ListItem(final S3ObjectSummary object, final String link) {
-        this.id = object.getKey();
-        this.name = Util.getLastBitFromUrl(object.getKey());
-        this.lastModified = object.getLastModified();
-        this.size = object.getSize();
-        this.humanReadableSize = FileUtils.byteCountToDisplaySize(object.getSize());
+    public S3ListItem(final S3Object object, final String link) {
+        this.id = object.key();
+        this.name = Util.getLastBitFromUrl(object.key());
+        this.lastModified = Date.from(object.lastModified());
+        this.size = object.size();
+        this.humanReadableSize = FileUtils.byteCountToDisplaySize(object.size());
         this.type = Type.FILE;
         this.link = link;
-        this.path = object.getKey();
-        String detect = TIKA.detect(object.getKey());
+        this.path = object.key();
+        String detect = TIKA.detect(object.key());
         if (detect.startsWith("image")) {
             this.type = Type.IMAGE;
         }

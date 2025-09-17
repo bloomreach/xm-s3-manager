@@ -9,9 +9,9 @@
     <repositories>
       <!-- SNIP -->
       <repository>
-        <id>hippo-maven2-forge</id>
-        <name>Hippo Maven 2 Repository</name>
-        <url>https://maven.onehippo.com/maven2-forge/</url>
+        <id>bloomreach-maven2-forge</id>
+        <name>Bloomreach Maven 2 Repository</name>
+        <url>https://maven.bloomreach.com/repository/maven2-forge/</url>
       </repository>
       <!-- SNIP -->
     </repositories>
@@ -136,19 +136,19 @@ The configuration of the S3 manager daemon module can be accessed and modified f
 > **Note :** The daemon module can be reconfigured while the application is running.The changes will be picked up without the need to restart it. **However, all uploads in progress will be aborted.** 
 ---
 
-| property | type| default value | required| description | notes |
-|--|--|--|--|--|--|
-|accessKey | string | none | yes | your S3 access key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_ACCESS_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
-|secretKey | string | none | yes | your S3 secret key |Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_SECRET_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module.|
-|region | string | none | yes | the appropriate AWS region for your account. For a full list of the available regions please visit this [page](https://docs.aws.amazon.com/general/latest/gr/s3.html) | |
-|bucket | string | none | yes | your S3 bucket name | |
-|presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering | |
-|aclEnabled| boolean | true | no |flag for ACL enabled buckets | |
-|expirationTime | long | none | no | used with presigned true and value is expiration in minutes | |
-|allowedExtensions | multi string | null | no | optionally define the list of allowed mime types or extensions for the upload operation `Eg.: image/*, application/pdf, .psd` | |
-|maxFileSize | long | 160000 | no | the maximum allowed file size in MB. | |
-|chunkSize | long | 5 | no | the size of chunks in MB for a multi part upload. | |
-|timeout | long | 0 | no | the time a call will timeout in milliseconds. 0 is the value for no timeout. | |
+| property | type| default value | required| description | notes                                                                                                                                                                                                                                                                       |
+|--|--|--|--|--|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|accessKey | string | none | yes | your S3 access key | Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_ACCESS_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module. |
+|secretKey | string | none | yes | your S3 secret key | Optionally, if required this property can be passed as an environment variable or system property with the name `XM_S3_SECRET_KEY`. In this case the module configuration property is not required. The order we check the configuration is environment, system and module. |
+|region | string | none | yes | the appropriate AWS region for your account. For a full list of the available regions please visit this [page](https://docs.aws.amazon.com/general/latest/gr/s3.html) |                                                                                                                                                                                                                                                                             |
+|bucket | string | none | yes | your S3 bucket name |                                                                                                                                                                                                                                                                             |
+|presigned | boolean | false | yes |flag to generate either static or presigned URLs during rendering |                                                                                                                                                                                                                                                                             |
+|aclEnabled| boolean | true | no |flag for ACL enabled buckets |                                                                                                                                                                                                                                                                             |
+|expirationTime | long | none | no | used with presigned true and value is expiration in minutes | the default signing algorithm requires a minimum expiration of 1 second and a maximum expiration of 7 days                                                                                                                                                                  |
+|allowedExtensions | multi string | null | no | optionally define the list of allowed mime types or extensions for the upload operation `Eg.: image/*, application/pdf, .psd` |                                                                                                                                                                                                                                                                             |
+|maxFileSize | long | 160000 | no | the maximum allowed file size in MB. |                                                                                                                                                                                                                                                                             |
+|chunkSize | long | 5 | no | the size of chunks in MB for a multi part upload. |                                                                                                                                                                                                                                                                             |
+|timeout | long | 0 | no | the time a call will timeout in milliseconds. 0 is the value for no timeout. |                                                                                                                                                                                                                                                                             |
 ---
 ### User Roles
 
@@ -222,6 +222,6 @@ Image generation
 
 | CMS Version | XM S3 Manager Version | Release Notes                                                                                                                                                                                                                                                         
 |-------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 16.x.x      | 3.0.0                 | 3.0.0 - Upgrade to BrXM version 16.x                                                                                                                                                                                                                                  |
+| 16.x.x      | 3.1.0                 | 3.1.0 - Upgrade from v1 to v2 of the AWS S3 SDK <br/>3.0.0 - Upgrade to BrXM version 16.x                                                                                                                                                                             |
 | 15.x.x      | 2.0.1                 | 2.0.1 - Fix creation of S3 links in CK editor<br/>2.0.0 - Fix multipart upload,<br/>Add backwards compatible support for ACL enabled backets,<br/>Added basic operations audit logging (AwsS3ProxyController log level info)<br/>1.0.0 - Upgrade to BrXM version 15.x |
 | 14.x.x      | 0.5.0                 | Minor bug fixes                                                                                                                                                                                                                                                       |

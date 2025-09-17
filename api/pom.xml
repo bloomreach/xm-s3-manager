@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.bloomreach.xm.manager</groupId>
     <artifactId>brxm-s3-manager</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
   </parent>
   <artifactId>brxm-s3-manager-api</artifactId>
   <name>brXM S3 Manager API</name>
@@ -23,19 +23,19 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-services</artifactId>
-      <version>${hippo.services.version}</version>
+      <version>${hippo.release.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-jaxrs</artifactId>
-      <version>${hippo.repository.version}</version>
+      <version>${hippo.release.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-s3</artifactId>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
       <version>${aws.s3.sdk.version}</version>
     </dependency>
 
