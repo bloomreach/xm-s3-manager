@@ -23,14 +23,14 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-services</artifactId>
-      <version>${hippo.services.version}</version>
+      <version>${hippo.release.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-jaxrs</artifactId>
-      <version>${hippo.repository.version}</version>
+      <version>${hippo.release.version}</version>
     </dependency>
 
     <dependency>
